@@ -22,7 +22,7 @@ avatar_image: /img/git_pic.jpg
 
 #-------------------------------
 # Contact links
-linkedln: "www.linkedin.com/in/david-mutikainen" # Add your linkedln handle
+linkedln: "https://www.linkedin.com/in/david-mutikainen/" # Add your linkedln handle
 github: "https://dmutikainen.github.io"  # Add your github handle
 
 paginate: 6
