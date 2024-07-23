@@ -92,12 +92,12 @@ ___
 
 An A/B Test can be described as a randomised experiment containing two groups, A & B, that receive different experiences. Within an A/B Test, we look to understand and measure the response of each group - and the information from this helps drive future business decisions.
 
-Application of A/B testing can range from testing different online ad strategies, different email subject lines when contacting customers, or testing the effect of mailing customers a coupon, vs a control group.  Companies like Amazon are running these tests in an almost never-ending cycle, testing new website features on randomised groups of customers...all with the aim of finding what works best so they can stay ahead of their competition.  Reportedly, Netflix will even test different images for the same movie or show, to different segments of their customer base to see if certain images pull more viewers in.
+Application of A/B testing can range from testing different online ad strategies, different email subject lines when contacting customers, or testing the effect of mailing customers a coupon, vs a control group.
 
 <br>
 #### Hypothesis Testing
 
-A Hypothesis Test is used to assess the plausibility, or likelihood of an assumed viewpoint based on sample data - in other words, a it helps us assess whether a certain view we have about some data is likely to be true or not.
+A Hypothesis Test is used to assess the plausibility, or likelihood of an assumed viewpoint based on sample data - in other words, it helps us assess whether a certain view we have about some data is likely to be true or not.
 
 There are many different scenarios we can run Hypothesis Tests on, and they all have slightly different techniques and formulas - however they all have some shared, fundamental steps & logic that underpin how they work.
 
@@ -167,7 +167,7 @@ import pandas as pd
 from scipy.stats import chi2_contingency, chi2
 
 # import campaign data
-campaign_data = ...
+campaign_data = pd.read_excel("grocery_database.xlsx", sheet_name = "campaign_data")
 
 # remove customers who were in the control group
 campaign_data = campaign_data.loc[campaign_data["mailer_type"] != "Control"]
@@ -198,7 +198,7 @@ In the DataFrame we have:
 * customer_id
 * campaign name
 * mailer_type (either Mailer1 or Mailer2)
-* signup_flag (either 1 or 0)
+* signup_flag (either 1 (indicating the customer signed up) or 0)
 
 ___
 
@@ -208,7 +208,7 @@ ___
 <br>
 #### State Hypotheses & Acceptance Criteria For Test
 
-The very first thing we need to do in any form of Hypothesis Test is state our Null Hypothesis, our Alternate Hypothesis, and the Acceptance Criteria (more details on these in the section above)
+The very first thing we need to do in any form of Hypothesis Test is state our Null Hypothesis, our Alternate Hypothesis, and the Acceptance Criteria.
 
 In the code below we code these in explcitly & clearly so we can utilise them later to explain the results.  We specify the common Acceptance Criteria value of 0.05.
 
