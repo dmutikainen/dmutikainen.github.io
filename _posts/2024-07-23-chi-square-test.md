@@ -5,7 +5,7 @@ image: "/posts/ab-testing-title-img.png"
 tags: [AB Testing, Hypothesis Testing, Chi-Square, Python]
 ---
 
-In this project we apply Chi-Square Test For Independence (a Hypothesis Test) to assess the performance of two types of mailers that were sent out to promote a new service! 
+In this project we apply Chi-Square Test For Independence to assess the performance of two types of mailers that were sent out to promote a new service. 
 
 # Table of contents
 
@@ -25,11 +25,15 @@ ___
 
 ### Context <a name="overview-context"></a>
 
-Earlier in the year, our client, a grocery retailer, ran a campaign to promote their new "Delivery Club" - an initiative that costs a customer $100 per year for membership, but offers free grocery deliveries rather than the normal cost of $10 per delivery.
+Earlier in the year, our client (a grocery retailer) ran a campaign to promote their new "Delivery Club" - an initiative that costs a customer $100 per year for membership, but offers free grocery deliveries rather than the normal cost of $10 per delivery.
 
-For the campaign promoting the club, customers were put randomly into three groups - the first group received a low quality, low cost mailer, the second group received a high quality, high cost mailer, and the third group were a control group, receiving no mailer at all.
+For the campaign promoting the club, customers were put randomly into three groups: 
 
-The client knows that customers who were contacted, signed up for the Delivery Club at a far higher rate than the control group, but now want to understand if there is a significant difference in signup rate between the cheap mailer and the expensive mailer.  This will allow them to make more informed decisions in the future, with the overall aim of optimising campaign ROI!
+* The first group received a low quality, low cost mailer.
+* The second group received a high quality, high cost mailer.
+* The third group was a control group, receiving no mailer at all.
+
+The client knows that customers who were contacted (first and second group) signed up for the Delivery Club at a far higher rate than the control group, but now want to understand if there is a significant difference in signup rate between the cheap mailer and the expensive mailer.  This will allow them to make more informed decisions in the future, with the overall aim of optimising campaign ROI. Specifically, we want to know if it's worth spending the extra money on higher quality mailers. 
 
 <br>
 <br>
