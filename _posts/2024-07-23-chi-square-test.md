@@ -37,10 +37,11 @@ For the campaign promoting the club, customers were put randomly into three grou
 
 The client knows that customers who were contacted (Mailer 1 and Mailer 2) signed up for the Delivery Club at a far higher rate than the control group, but now want to understand if there is a significant difference in signup rate between the cheap mailer and the expensive mailer.  This will allow our client to make more informed decisions in the future, with the overall aim of optimising campaign ROI.
 
-*Specifically, we want to know if it's worth spending the extra money on higher quality mailers.*
+***Specifically, we want to know if it's worth spending the extra money on higher quality mailers.***
 
 <br>
 <br>
+
 ### Actions <a name="overview-actions"></a>
 
 For this test, as it is focused on comparing the *rates* of two groups - we applied the Chi-Square Test For Independence.  Full details of this test can be found in the dedicated section below.
@@ -74,7 +75,7 @@ The Critical Value for our specified Acceptance Criteria of 0.05 is **3.84**
 
 Based upon these statistics, we retain the null hypothesis, and conclude that there is no relationship between mailer type and sign-up rate.
 
-In other words - even though the higher cost Mailer 2 had a higher signup rate (37.8%) than the lower cost Mailer 1 (32.8%, this difference is *not* significant based on our Acceptance Criteria of 0.05.
+In other words - even though the higher cost Mailer 2 had a higher signup rate (37.8%) than the lower cost Mailer 1 (32.8%), this difference is ***not*** significant based on our Acceptance Criteria of 0.05.
 
 Without running this Hypothesis Test, the client may have concluded that they should always look to go with higher cost mailers ude to the slight increase in sign-up rate over the low cost mailer - but from what we've seen in this test - that may not be a great decision.  It would result in spending more money on the mailer, but not *necessarily* gaining any extra revenue as a result.
 
