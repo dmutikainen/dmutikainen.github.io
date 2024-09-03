@@ -46,15 +46,15 @@ The client knows that customers who were contacted (Mailer 1 and Mailer 2) signe
 
 For this test, as it is focused on comparing the *rates* of two groups - we applied the Chi-Square Test For Independence.  Full details of this test can be found in the dedicated section below.
 
-From the *campaign_data* table in the client database, we excluded the Control group and isolated customers in Mailer 1 (low quality) and Mailer 2 (high wuality mailer).
+From the *campaign_data* table in the client database, we excluded the Control group and isolated customers in Mailer 1 (low quality) and Mailer 2 (high quality mailer).
 
-We set out our hypotheses and Acceptance Criteria for the test, as follows:
+We set out our hypotheses and Acceptance Criteria for the test as follows:
 
-**Null Hypothesis:** There is no relationship between mailer type and signup rate. They are independent.
-**Alternate Hypothesis:** There is a relationship between mailer type and signup rate. They are not independent.
-**Acceptance Criteria:** 0.05
+* **Null Hypothesis:** There is no relationship between mailer type and signup rate. They are independent.
+* **Alternate Hypothesis:** There is a relationship between mailer type and signup rate. They are not independent.
+* **Acceptance Criteria:** 0.05
 
-As a requirement of the Chi-Square Test For Independence, we aggregated this data down to a 2x2 matrix for *signup_flag* by *mailer_type* and fed this into the algorithm (using the *scipy* library) to calculate the Chi-Square Statistic, p-value, Degrees of Freedom, and expected values.
+As a requirement of the Chi-Square Test For Independence, we aggregated this data down to a 2x2 matrix for *signup_flag* by *mailer_type* and fed this into the algorithm (using the *scipy* library) to calculate the Chi-Square Statistic, p-value, Degrees of Freedom, and Expected Values.
 
 <br>
 <br>
@@ -73,11 +73,11 @@ The Chi-Square Test gives us the following statistics:
 
 The Critical Value for our specified Acceptance Criteria of 0.05 is **3.84**
 
-Based upon these statistics, we retain the null hypothesis, and conclude that there is no relationship between mailer type and sign-up rate.
+Based upon these statistics, we retain the null hypothesis and conclude ***there is no relationship between mailer type and sign-up rate***.
 
-In other words - even though the higher cost Mailer 2 had a higher signup rate (37.8%) than the lower cost Mailer 1 (32.8%), this difference is ***not*** significant based on our Acceptance Criteria of 0.05.
+In other words - even though the higher cost Mailer 2 had a higher sign-up rate (37.8%) than the lower cost Mailer 1 (32.8%), this difference is ***not*** significant based on our Acceptance Criteria of 0.05.
 
-Without running this Hypothesis Test, the client may have concluded that they should always look to go with higher cost mailers ude to the slight increase in sign-up rate over the low cost mailer - but from what we've seen in this test - that may not be a great decision.  It would result in spending more money on the mailer, but not *necessarily* gaining any extra revenue as a result.
+Without running this Hypothesis Test, the client may have concluded that they should always look to go with higher cost mailers due to the slight increase in sign-up rate over the low cost mailer - but from what we've seen in this test - that might not be the best decision.  It would result in spending more money on the mailer, but not *necessarily* gaining any extra revenue as a result.
 
 Our results here also do not say there *definitely isn't a difference between the two mailers* - we are only advising that we should not make any rigid conclusions *at this point*.  
 
@@ -93,35 +93,35 @@ ___
 <br>
 #### A/B Testing
 
-An A/B Test can be described as a randomised experiment containing two groups, A & B, that receive different experiences. Within an A/B Test, we look to understand and measure the response of each group - and the information from this helps drive future business decisions.
+An A/B Test can be described as a randomised experiment containing two groups, A & B, that receive different experiences. Within an A/B Test, we look to understand and measure the response of each group, and the information from this helps drive future business decisions.
 
 Application of A/B testing can range from testing different online ad strategies, different email subject lines when contacting customers, or testing the effect of mailing customers a coupon, vs a control group.
 
 <br>
 #### Hypothesis Testing
 
-A Hypothesis Test is used to assess the plausibility, or likelihood of an assumed viewpoint based on sample data - in other words, it helps us assess whether a certain view we have about some data is likely to be true or not.
+A Hypothesis Test is used to assess the plausibility, or likelihood of an assumed viewpoint based on sample data. In other words, it helps us assess whether a certain view we have about some data is likely to be true or not.
 
 There are many different scenarios we can run Hypothesis Tests on, and they all have slightly different techniques and formulas - however they all have some shared, fundamental steps & logic that underpin how they work.
 
 <br>
 **The Null Hypothesis**
 
-In any Hypothesis Test, we start with the Null Hypothesis. The Null Hypothesis is where we state our initial viewpoint, and in statistics, and specifically Hypothesis Testing, our initial viewpoint is always that the result is purely by chance or that there is no relationship or association between two outcomes or groups
+In any Hypothesis Test, we start with the Null Hypothesis. The Null Hypothesis is where we state our initial viewpoint, and in statistics (specifically Hypothesis Testing), our initial viewpoint is always that the result is purely by chance or that there is no relationship or association between two outcomes or groups.
 
 <br>
 **The Alternate Hypothesis**
 
-The aim of the Hypothesis Test is to look for evidence to support or reject the Null Hypothesis.  If we reject the Null Hypothesis, that would mean we’d be supporting the Alternate Hypothesis.  The Alternate Hypothesis is essentially the opposite viewpoint to the Null Hypothesis - that the result is *not* by chance, or that there *is* a relationship between two outcomes or groups
+The aim of the Hypothesis Test is to look for evidence to support or reject the Null Hypothesis.  If we reject the Null Hypothesis, that would mean we’d be supporting the Alternate Hypothesis.  The Alternate Hypothesis is essentially the opposite viewpoint to the Null Hypothesis - that the result is *not* by chance, or that there *is* a relationship between two outcomes or groups.
 
 <br>
 **The Acceptance Criteria**
 
-In a Hypothesis Test, before we collect any data or run any numbers - we specify an Acceptance Criteria.  This is a p-value threshold at which we’ll decide to reject or support the null hypothesis.  It is essentially a line we draw in the sand saying "if I was to run this test many many times, what proportion of those times would I want to see different results come out, in order to feel comfortable, or confident that my results are not just some unusual occurrence"
+In a Hypothesis Test, before we collect any data or run any numbers - we specify an Acceptance Criteria.  This is a p-value threshold at which we’ll decide to reject or support the Null Hypothesis.  It is essentially a line we draw in the sand saying: *"if we were to run this test many times, what proportion of those test runs do we want to see different results come out, in order to feel comfortable, or confident that my results are not just some unusual occurrence"*.
 
 Conventionally, we set our Acceptance Criteria to 0.05 - but this does not have to be the case.  If we need to be more confident that something did not occur through chance alone, we could lower this value down to something much smaller, meaning that we only come to the conclusion that the outcome was special or rare if it’s extremely rare.
 
-So to summarise, in a Hypothesis Test, we test the Null Hypothesis using a p-value and then decide it’s fate based on the Acceptance Criteria.
+So to summarise, in a Hypothesis Test, we test the Null Hypothesis using a p-value and compare this to the Acceptance Criteria to determine whether we accept or reject the Null Hypothesis.
 
 <br>
 **Types Of Hypothesis Test**
