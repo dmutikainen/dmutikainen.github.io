@@ -284,16 +284,20 @@ for column in outlier_columns:
     max_border = upper_quartile + iqr_extended
     
     outliers = data_for_model[(data_for_model[column] < min_border) | (data_for_model[column] > max_border)].index
-    print(f"{len(outliers)} outliers detected in column {column}")
+    print(f"{len(outliers)} outliers detected in column {column} and were removed from the dataset.")
     
     data_for_model.drop(outliers, inplace = True)
+
+>> 2 outliers detected in column distance_from_store and were removed from the dataset.
+23 outliers detected in column total_sales and were removed from the dataset.
+0 outliers detected in column total_items and were removed from the dataset.
 
 ```
 
 <br>
 ##### Split Out Data For Modelling
 
-In the next code block we do two things.
+In the next code block we do two things:
 * We split our data into an **X** object which contains only the inputs (predictor variables / customer metrics), and a **y** object that contains only our dependent variable (loyalty score).
 * Then we split our data into training and test sets to ensure we can fairly validate the accuracy of the predictions on data that was not used in training.  In this case, we have allocated 80% of the data for training, and the remaining 20% for validation.
 
