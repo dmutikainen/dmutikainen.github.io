@@ -139,7 +139,7 @@ The *assumption* is the Null Hypothesis, which as discussed above is always the 
 
 The *observed frequencies* are the true values that we’ve seen.
 
-The *expected frequencies* are essentially what we would *expect* to see based on all the datat if there were no association between the variables.
+The *expected frequencies* are essentially what we would *expect* to see based on all the data if there were no association between the variables.
 
 ___
 
