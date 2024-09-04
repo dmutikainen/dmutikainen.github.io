@@ -5,16 +5,16 @@ image: "/posts/regression-title-img.png"
 tags: [Customer Loyalty, Machine Learning, Regression, Python]
 ---
 
-Our client, a grocery retailer, hired a market research consultancy to append market level customer loyalty information to the database.  However, only around 50% of the client's customer base could be tagged, thus the other half did not have this information present.  Let's use ML to solve this!
+Our client, a grocery retailer, hired a market research consultancy to append market level customer loyalty information to their database.  However, only around 50% of the client's customer base could be tagged, thus the other half did not have this information present. For this project, we will use Machine Learning to predict the Customer Loyalty Score for customers who do not have a score, using the data from customers who do have a score. 
 
 # Table of contents
 
 - [00. Project Overview](#overview-main)
     - [Context](#overview-context)
+    - [Key Definition](#overview-definition)
     - [Actions](#overview-actions)
     - [Results](#overview-results)
     - [Growth/Next Steps](#overview-growth)
-    - [Key Definition](#overview-definition)
 - [01. Data Overview](#data-overview)
 - [02. Modelling Overview](#modelling-overview)
 - [03. Linear Regression](#linreg-title)
@@ -32,16 +32,27 @@ ___
 
 Our client, a grocery retailer, hired a market research consultancy to append market level customer loyalty information to the database.  However, only around 50% of the client's customer base could be tagged, thus the other half did not have this information present.
 
-The overall aim of this work is to accurately predict the *loyalty score* for those customers who could not be tagged, enabling our client a clear understanding of true customer loyalty, regardless of total spend volume - and allowing for more accurate and relevant customer tracking, targeting, and comms.
+The overall aim of this work is to accurately predict the *loyalty score* for those customers who could not be tagged, enabling our client a clear understanding of true customer loyalty, regardless of total spend volume - and allowing for more accurate and relevant customer tracking, targeting, and communications.
 
 To achieve this, we looked to build out a predictive model that will find relationships between customer metrics and *loyalty score* for those customers who were tagged, and use this to predict the loyalty score metric for those who were not.
 <br>
 <br>
+
+### Key Definition  <a name="overview-definition"></a>
+
+The *loyalty score* metric measures the % of grocery spend (market level) that each customer allocates to the client vs. all of the competitors.  
+
+Example 1: Customer X has a total grocery spend of $100 and all of this is spent with our client. Customer X has a *loyalty score* of 1.0
+
+Example 2: Customer Y has a total grocery spend of $200 but only 20% is spent with our client.  The remaining 80% is spend with competitors.  Customer Y has a *customer loyalty score* of 0.2.
+<br>
+<br>
+
 ### Actions <a name="overview-actions"></a>
 
-We firstly needed to compile the necessary data from tables in the database, gathering key customer metrics that may help predict *loyalty score*, appending on the dependent variable, and separating out those who did and did not have this dependent variable present.
+First we needed to compile the necessary data from tables in the database. We gathered key customer metrics that may help predict *loyalty score* and appended the dependent variable. We then had to separate out those who did and did not have this dependent variable (*loyalty_score*) present.
 
-As we are predicting a numeric output, we tested three regression modelling approaches, namely:
+As we are predicting a numeric output, we tested three regression modelling approaches:
 
 * Linear Regression
 * Decision Tree
@@ -72,20 +83,14 @@ As the most important outcome for this project was predictive accuracy, rather t
 <br>
 ### Growth/Next Steps <a name="overview-growth"></a>
 
-While predictive accuracy was relatively high - other modelling approaches could be tested, especially those somewhat similar to Random Forest, for example XGBoost, LightGBM to see if even more accuracy could be gained.
+Once we calculated that a Random Forest was the best approach to use, we can predict the loyalty scores for customers who did not have one. Once the client has a complete set of customers with how loyal they are, the client can adjust their marketing plans to drive more business.
 
-From a data point of view, further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty
+While predictive accuracy was relatively high - other modelling approaches could be tested, for example XGBoost, LightGBM to see if even more accuracy could be gained.
+
+From a data point of view, further variables could be collected (customer metrics), and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty.
 <br>
 <br>
-### Key Definition  <a name="overview-definition"></a>
 
-The *loyalty score* metric measures the % of grocery spend (market level) that each customer allocates to the client vs. all of the competitors.  
-
-Example 1: Customer X has a total grocery spend of $100 and all of this is spent with our client. Customer X has a *loyalty score* of 1.0
-
-Example 2: Customer Y has a total grocery spend of $200 but only 20% is spent with our client.  The remaining 80% is spend with competitors.  Customer Y has a *customer loyalty score* of 0.2
-<br>
-<br>
 ___
 
 # Data Overview  <a name="data-overview"></a>
@@ -103,9 +108,9 @@ import pandas as pd
 import pickle
 
 # import required data tables
-loyalty_scores = ...
-customer_details = ...
-transactions = ...
+loyalty_scores = pd.read_excel("grocery_database.xlsx", sheet_name = "loyalty_scores")
+customer_details = pd.read_excel("grocery_database.xlsx", sheet_name = "customer_details")
+transactions = pd.read_excel("grocery_database.xlsx", sheet_name = "transactions")
 
 # merge loyalty score data and customer details data, at customer level
 data_for_regression = pd.merge(customer_details, loyalty_scores, how = "left", on = "customer_id")
@@ -235,7 +240,7 @@ data_for_model.dropna(how = "any", inplace = True)
 <br>
 ##### Outliers
 
-The ability for a Linear Regression model to generalise well across *all* data can be hampered if there are outliers present.  There is no right or wrong way to deal with outliers, but it is always something worth very careful consideration - just because a value is high or low, does not necessarily mean it should not be there!
+The ability for a Linear Regression model to generalise well across *all* data can be hampered if there are outliers present.  There is no right or wrong way to deal with outliers, but it is always something worth very careful consideration - just because a value is high or low, does not necessarily mean it should not be there.
 
 In this code section, we use **.describe()** from Pandas to investigate the spread of values for each of our predictors.  The results of this can be seen in the table below.
 
@@ -256,9 +261,9 @@ Based on this investigation, we see some *max* column values for several variabl
 
 This is for columns *distance_from_store*, *total_sales*, and *total_items*
 
-For example, the median *distance_to_store* is 1.645 miles, but the maximum is over 44 miles!
+For example, the median *distance_to_store* is 1.65 miles, but the maximum is over 44 miles.
 
-Because of this, we apply some outlier removal in order to facilitate generalisation across the full dataset.
+Because of this, we apply some outlier removal in order to facilitate generalization across the full dataset.
 
 We do this using the "boxplot approach" where we remove any rows where the values within those columns are outside of the interquartile range multiplied by 2.
 
@@ -288,9 +293,9 @@ for column in outlier_columns:
 <br>
 ##### Split Out Data For Modelling
 
-In the next code block we do two things, we firstly split our data into an **X** object which contains only the predictor variables, and a **y** object that contains only our dependent variable.
-
-Once we have done this, we split our data into training and test sets to ensure we can fairly validate the accuracy of the predictions on data that was not used in training.  In this case, we have allocated 80% of the data for training, and the remaining 20% for validation.
+In the next code block we do two things.
+* We split our data into an **X** object which contains only the inputs (predictor variables / customer metrics), and a **y** object that contains only our dependent variable (loyalty score).
+* Then we split our data into training and test sets to ensure we can fairly validate the accuracy of the predictions on data that was not used in training.  In this case, we have allocated 80% of the data for training, and the remaining 20% for validation.
 
 <br>
 ```python
