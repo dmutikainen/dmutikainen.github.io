@@ -288,9 +288,9 @@ for column in outlier_columns:
     
     data_for_model.drop(outliers, inplace = True)
 
->> 2 outliers detected in column distance_from_store and were removed from the dataset.
-23 outliers detected in column total_sales and were removed from the dataset.
-0 outliers detected in column total_items and were removed from the dataset.
+>> "2 outliers detected in column distance_from_store and were removed from the dataset."
+>> "23 outliers detected in column total_sales and were removed from the dataset."
+>> "0 outliers detected in column total_items and were removed from the dataset."
 
 ```
 
