@@ -108,9 +108,9 @@ import pandas as pd
 import pickle
 
 # import required data tables
-loyalty_scores = pd.read_excel("grocery_database.xlsx", sheet_name = "loyalty_scores")
-customer_details = pd.read_excel("grocery_database.xlsx", sheet_name = "customer_details")
-transactions = pd.read_excel("grocery_database.xlsx", sheet_name = "transactions")
+loyalty_scores = pd.read_excel("data/grocery_database.xlsx", sheet_name = "loyalty_scores")
+customer_details = pd.read_excel("data/grocery_database.xlsx", sheet_name = "customer_details")
+transactions = pd.read_excel("data/grocery_database.xlsx", sheet_name = "transactions")
 
 # merge loyalty score data and customer details data, at customer level
 data_for_regression = pd.merge(customer_details, loyalty_scores, how = "left", on = "customer_id")
