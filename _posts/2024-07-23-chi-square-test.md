@@ -115,46 +115,40 @@ In any Hypothesis Test, we start with the Null Hypothesis. The Null Hypothesis i
 The aim of the Hypothesis Test is to look for evidence to support or reject the Null Hypothesis.  If we reject the Null Hypothesis, that would mean we’d be supporting the Alternate Hypothesis.  The Alternate Hypothesis is essentially the opposite viewpoint to the Null Hypothesis - that the result is *not* by chance, or that there *is* a relationship between two outcomes or groups.
 
 <br>
-**The Acceptance Criteria**
+**The Acceptance Criteria & p-value**
 
-In a Hypothesis Test, before we collect any data or run any numbers - we specify an Acceptance Criteria.  This is a p-value threshold at which we’ll decide to reject or support the Null Hypothesis.  It is essentially a line we draw in the sand saying: *"if we were to run this test many times, what proportion of those test runs do we want to see different results come out, in order to feel comfortable, or confident that my results are not just some unusual occurrence"*.
+In a Hypothesis Test, before we collect any data or run any numbers - we specify an Acceptance Criteria.  This is a p-value threshold at which we’ll decide to reject or support the Null Hypothesis.  The p-value we obtain from running a Hypothesis Test is the probability of obtaining the results we got if the Null Hypothesis were true. For example, if we obtain a very small p-value (let's say 0.01), this means we'd get the outcome we observed about 1% of the time if we were to run the test many times - suggesting the Null Hypothesis is likely not true. 
 
-Conventionally, we set our Acceptance Criteria to 0.05 - but this does not have to be the case.  If we need to be more confident that something did not occur through chance alone, we could lower this value down to something much smaller, meaning that we only come to the conclusion that the outcome was special or rare if it’s extremely rare.
+Conventionally, we set the Acceptance Criteria to 0.05 - but this does not have to be the case.  If we want to be more confident that something did not occur through chance alone, we could lower this value down to something smaller, meaning we only come to the conclusion to reject the Null Hypothesis if the result is extremely rare (less than 0.01 for example).
 
-So to summarise, in a Hypothesis Test, we test the Null Hypothesis using a p-value and compare this to the Acceptance Criteria to determine whether we accept or reject the Null Hypothesis.
+So to summarize, in a Hypothesis Test, we test the Null Hypothesis using a p-value and compare this to the Acceptance Criteria to determine whether we accept or reject the Null Hypothesis.
 
 <br>
 **Types Of Hypothesis Test**
 
 There are many different types of Hypothesis Tests, each of which is appropriate for use in differing scenarios - depending on a) the type of data that you’re looking to test and b) the question that you’re asking of that data.
 
-In the case of our task here, where we are looking to understand the difference in sign-up *rate* between two groups - we will utilise the Chi-Square Test For Independence.
+In the case of our task here, where we are looking to understand the difference in sign-up *rate* between two groups - so we will utilize the Chi-Square Test For Independence.
 
 <br>
 #### Chi-Square Test For Independence
 
 The Chi-Square Test For Independence is a type of Hypothesis Test that assumes observed frequencies for categorical variables will match the expected frequencies.
 
-The *assumption* is the Null Hypothesis, which as discussed above is always the viewpoint that the two groups will be equal.  With the Chi-Square Test For Independence we look to calculate a statistic which, based on the specified Acceptance Criteria will mean we either reject or support this initial assumption.
+The *assumption* is the Null Hypothesis, which as discussed above is always the viewpoint that the two groups will be equal.  With the Chi-Square Test For Independence we look to calculate a statistic which, based on the specified Acceptance Criteria, will mean we either reject or support this initial assumption.
 
 The *observed frequencies* are the true values that we’ve seen.
 
-The *expected frequencies* are essentially what we would *expect* to see based on all of the data.
-
-**Note:** Another option when comparing "rates" is a test known as the *Z-Test For Proportions*.  While, we could absolutely use this test here, we have chosen the Chi-Square Test For Independence because:
-
-* The resulting test statistic for both tests will be the same
-* The Chi-Square Test can be represented using 2x2 tables of data - meaning it can be easier to explain to stakeholders
-* The Chi-Square Test can extend out to more than 2 groups - meaning the business can have one consistent approach to measuring signficance
+The *expected frequencies* are essentially what we would *expect* to see based on all the datat if there were no association between the variables.
 
 ___
 
 <br>
 # Data Overview & Preparation  <a name="data-overview"></a>
 
-In the client database, we have a *campaign_data* table which shows us which customers received each type of "Delivery Club" mailer, which customers were in the control group, and which customers joined the club as a result.
+In the client database, we have a *campaign_data* table that has columns indicating what mailer each customer received (Mailer 1, Mailer 2 or Control), and whether or not they signed up for the Delivery Club.
 
-For this task, we are looking to find evidence that the Delivery Club signup rate for customers that received "Mailer 1" (low cost) was different to those who received "Mailer 2" (high cost) and thus from the *campaign_data* table we will just extract customers in those two groups, and exclude customers who were in the control group.
+For this task, we are looking to find evidence that the Delivery Club sign-up rate for customers that received "Mailer 1" (low cost) was significantly different to those who received "Mailer 2" (high cost) - thus from the *campaign_data* table we will just extract customer data in those two groups, and exclude customers who were in the Control group.
 
 In the code below, we:
 
@@ -201,7 +195,7 @@ In the DataFrame we have:
 * customer_id
 * campaign name
 * mailer_type (either Mailer1 or Mailer2)
-* signup_flag (either 1 (indicating the customer signed up) or 0)
+* signup_flag - 1 indicating the customer signed up for the Delivery Club.
 
 ___
 
@@ -211,9 +205,9 @@ ___
 <br>
 #### State Hypotheses & Acceptance Criteria For Test
 
-The very first thing we need to do in any form of Hypothesis Test is state our Null Hypothesis, our Alternate Hypothesis, and the Acceptance Criteria.
+The first thing to do in any form of Hypothesis Test is state our Null Hypothesis, our Alternate Hypothesis, and the Acceptance Criteria.
 
-In the code below we code these in explcitly & clearly so we can utilise them later to explain the results.  We specify the common Acceptance Criteria value of 0.05.
+In the code below we code these in explcitly so we can utilize them later to explain the results.  We specify the common Acceptance Criteria value of 0.05.
 
 ```python
 
@@ -227,11 +221,11 @@ acceptance_criteria = 0.05
 <br>
 #### Calculate Observed Frequencies & Expected Frequencies
 
-As mentioned in the section above, in a Chi-Square Test For Independence, the *observed frequencies* are the true values that we’ve seen, in other words the actual rates per group in the data itself.  The *expected frequencies* are what we would *expect* to see based on *all* of the data combined.
+As mentioned in the section above, in a Chi-Square Test For Independence, the *observed frequencies* are the true values that we’ve seen - in other words - the actual rates per group in the data itself.  The *expected frequencies* are what we would *expect* to see based on *all* of the data combined.
 
 The below code:
 
-* Summarises our dataset to a 2x2 matrix for *signup_flag* by *mailer_type*
+* Summarizes our dataset to a 2x2 matrix for *signup_flag* by *mailer_type*
 * Based on this, calculates the:
     * Chi-Square Statistic
     * p-value
@@ -271,22 +265,22 @@ Based upon our observed values, we can give this all some context with the sign-
 * Mailer 1 (Low Cost): **32.8%** signup rate
 * Mailer 2 (High Cost): **37.8%** signup rate
 
-From this, we can see that the higher cost mailer does lead to a higher signup rate.  The results from our Chi-Square Test will provide us more information about how confident we can be that this difference is robust, or if it might have occured by chance.
+From this, we can see that the higher cost mailer leads to a higher sign-up rate.  However, the results from our Chi-Square Test will provide us more information about how confident we can be that this difference is meaningful, or if it might have occured by chance.
 
 We have a Chi-Square Statistic of **1.94** and a p-value of **0.16**.  The critical value for our specified Acceptance Criteria of 0.05 is **3.84**
 
-**Note** When applying the Chi-Square Test above, we use the parameter *correction = False* which means we are applying what is known as the *Yate's Correction* which is applied when your Degrees of Freedom is equal to one.  This correction helps to prevent overestimation of statistical signficance in this case.
+**Note** When applying the Chi-Square Test above, we use the parameter *correction = False* which means we are applying what is known as the *Yate's Correction* which is applied when your Degrees of Freedom is equal to 1.  This correction helps to prevent overestimation of statistical signficance in this case.
 
 ___
 
 <br>
 # Analysing The Results <a name="chi-square-results"></a>
 
-At this point we have everything we need to understand the results of our Chi-Square test - and just from the results above we can see that, since our resulting p-value of **0.16** is *greater* than our Acceptance Criteria of 0.05 then we will _retain_ the Null Hypothesis and conclude that there is no significant difference between the signup rates of Mailer 1 and Mailer 2.
+At this point we have everything we need to understand the results of our Chi-Square test - and just from the results above we can see that, since our resulting p-value of **0.16** is *greater* than our Acceptance Criteria of 0.05 then we will _retain_ the Null Hypothesis and conclude that there is no significant difference between the sign-up rates of Mailer 1 and Mailer 2.
 
 We can make the same conclusion based upon our resulting Chi-Square statistic of **1.94** being _lower_ than our Critical Value of **3.84**
 
-To make this script more dynamic, we can create code to automatically interpret the results and explain the outcome to us...
+To make this script more dynamic, we can create code to automatically interpret the results and explain the outcome to us:
 
 ```python
 
@@ -309,17 +303,17 @@ else:
 
 ```
 <br>
-As we can see from the outputs of these print statements, we do indeed retain the null hypothesis.  We could not find enough evidence that the signup rates for Mailer 1 and Mailer 2 were different - and thus conclude that there was no significant difference.
+As we can see from the outputs of these print statements, we do indeed retain the Null Hypothesis.  We could not find enough evidence that the sign-up rates for Mailer 1 and Mailer 2 were different - and thus conclude there is no significant difference.
 
 ___
 
 <br>
 # Discussion <a name="discussion"></a>
 
-While we saw that the higher cost Mailer 2 had a higher signup rate (37.8%) than the lower cost Mailer 1 (32.8%) it appears that this difference is not significant, at least at our Acceptance Criteria of 0.05.
+While we saw that the higher cost Mailer 2 had a higher sign-up rate (37.8%) than the lower cost Mailer 1 (32.8%) it appears this difference is not significant, at least at our Acceptance Criteria of 0.05.
 
-Without running this Hypothesis Test, the client may have concluded that they should always look to go with higher cost mailers - and from what we've seen in this test, that may not be a great decision.  It would result in them spending more, but not *necessarily* gaining any extra revenue as a result
+Without running this Hypothesis Test, the client may have concluded they should always look to go with higher cost mailers - and from what we've seen in this test, that may not be a great decision.  It would result in them spending more, but not *necessarily* gaining any extra revenue as a result.
 
 Our results here also do not say that there *definitely isn't a difference between the two mailers* - we are only advising that we should not make any rigid conclusions *at this point*.  
 
-Running more A/B Tests like this, gathering more data, and then re-running this test may provide us, and the client more insight!
+Running more A/B Tests like this, gathering more data, and then re-running this test may provide us, and the client more insight.
