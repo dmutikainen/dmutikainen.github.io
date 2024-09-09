@@ -372,13 +372,12 @@ For our task we applied a variation of Recursive Feature Elimination called ***R
 * **CV**: CV involves splitting the dataset into multiple "folds." The model is trained on some of the folds and tested on the others. This process is repeated several times, ensuring the model performs well on unseen data and is not overfitting or memorizing the training data.
 * Combined, we get **RFECV**: This technique combines RFE and CV by applying cross-validation at each step of the feature elimination process. After removing a feature, the model's accuracy is evaluated using CV to determine how well it performs with the remaining features. This ensures that the optimal subset of features is selected based on performance across multiple iterations, minimizing the chance of overfitting and improving generalization.
 
-In short, RFECV will help figure out what features are most useful for our model by removing unimportant ones step by step, while ensuring the model works will on any new data.
+In short, RFECV will help figure out what features are most useful for our model by removing unimportant ones step by step, while ensuring the model works well on any new data.
 
 We will first run RFECV on our training set to identify the most important features. We then create a plot to visualize the accuracy of our model with each potential number of features.
 
 <br>
 ```python
-
 # instantiate RFECV & the model type to be utilized
 regressor = LinearRegression()
 feature_selector = RFECV(regressor)
