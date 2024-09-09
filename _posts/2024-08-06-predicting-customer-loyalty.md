@@ -336,17 +336,17 @@ For ease, after we have applied One Hot Encoding, we turn our training and test 
 # list of categorical variables that need encoding
 categorical_vars = ["gender"]
 
-# instantiate OHE class
+# instantiate One Hot Encoder class
 one_hot_encoder = OneHotEncoder(sparse=False, drop = "first")
 
-# apply OHE
+# apply One Hot Encoder to the Training and Test sets.
 X_train_encoded = one_hot_encoder.fit_transform(X_train[categorical_vars])
 X_test_encoded = one_hot_encoder.transform(X_test[categorical_vars])
 
 # extract feature names for encoded columns
 encoder_feature_names = one_hot_encoder.get_feature_names_out(categorical_vars)
 
-# turn objects back to pandas dataframe
+# turn objects back to pandas dataframe, then append the newly encoded columns to the dataset, then drop the original categorical variable.
 X_train_encoded = pd.DataFrame(X_train_encoded, columns = encoder_feature_names)
 X_train = pd.concat([X_train.reset_index(drop=True), X_train_encoded.reset_index(drop=True)], axis = 1)
 X_train.drop(categorical_vars, axis = 1, inplace = True)
@@ -360,24 +360,30 @@ X_test.drop(categorical_vars, axis = 1, inplace = True)
 <br>
 ##### Feature Selection
 
-Feature Selection is the process used to select the input variables that are most important to your Machine Learning task.  It can be a very important addition or at least, consideration, in certain scenarios.  The potential benefits of Feature Selection are:
+Feature Selection is the process used to select the input variables that are most important to your Machine Learning task. The potential benefits of Feature Selection are:
 
 * **Improved Model Accuracy** - eliminating noise can help true relationships stand out
 * **Lower Computational Cost** - our model becomes faster to train, and faster to make predictions
 * **Explainability** - understanding & explaining outputs for stakeholder & customers becomes much easier
 
-There are many, many ways to apply Feature Selection.  These range from simple methods such as a *Correlation Matrix* showing variable relationships, to *Univariate Testing* which helps us understand statistical relationships between variables, and then to even more powerful approaches like *Recursive Feature Elimination (RFE)* which is an approach that starts with all input variables, and then iteratively removes those with the weakest relationships with the output variable.
+For our task we applied a variation of Recursive Feature Elimination called *Recursive Feature Elimination With Cross Validation (RFECV)*. RFECV is a combination of **RFE** (Recursive Feature Elimination) and **CV** (Cross Validation).
 
-For our task we applied a variation of Reursive Feature Elimination called *Recursive Feature Elimination With Cross Validation (RFECV)* where we split the data into many "chunks" and iteratively trains & validates models on each "chunk" seperately.  This means that each time we assess different models with different variables included, or eliminated, the algorithm also knows how accurate each of those models was.  From the suite of model scenarios that are created, the algorithm can determine which provided the best accuracy, and thus can infer the best set of input variables to use!
+* In **RFE**, a model is built using all features, checks which feature is the least important, removes the least important feature from the model, then repeats the process of buiding a model and removing the least important feature.
+* **CV** is a technique used to see how well a model is performing. A dataset is split into different parts, or "folds" - the model is trained on some folds and tested on the other folds - this ensures the model will work with unseen data and isn't just memorizing the rules from the training set.
+* Combined, **RFECV** is when CV is used at each step in the RFE process. In each iteration, a feature is eliminated and CV is used to test the accuracy of the model with the remaining features before the next iteration. 
+
+In short, RFECV will help figure out what features are most useful for our model by removing unimportant ones step by step, while ensuring the model works will on any new data.
+
+We will first run RFECV on our training set to identify the most important features. We then create a plot to visualize the accuracy of our model with each potential number of features.
 
 <br>
 ```python
 
-# instantiate RFECV & the model type to be utilised
+# instantiate RFECV & the model type to be utilized
 regressor = LinearRegression()
 feature_selector = RFECV(regressor)
 
-# fit RFECV onto our training & test data
+# fit RFECV onto our training data
 fit = feature_selector.fit(X_train,y_train)
 
 # extract & print the optimal number of features
@@ -391,7 +397,7 @@ X_test = X_test.loc[:, feature_selector.get_support()]
 ```
 
 <br>
-The below code then produces a plot that visualises the cross-validated accuracy with each potential number of features
+The below code produces a plot that visualizes the cross-validated accuracy with each potential number of features:
 
 ```python
 
@@ -399,14 +405,14 @@ plt.style.use('seaborn-poster')
 plt.plot(range(1, len(fit.cv_results_['mean_test_score']) + 1), fit.cv_results_['mean_test_score'], marker = "o")
 plt.ylabel("Model Score")
 plt.xlabel("Number of Features")
-plt.title(f"Feature Selection using RFE \n Optimal number of features is {optimal_feature_count} (at score of {round(max(fit.cv_results_['mean_test_score']),4)})")
+plt.title(f"Feature Selection using RFECV \n Optimal number of features is {optimal_feature_count} (at score of {round(max(fit.cv_results_['mean_test_score']),4)})")
 plt.tight_layout()
 plt.show()
 
 ```
 
 <br>
-This creates the below plot, which shows us that the highest cross-validated accuracy (0.8635) is actually when we include all eight of our original input variables.  This is marginally higher than 6 included variables, and 7 included variables.  We will continue on with all 8!
+This creates the below plot, which shows us that the highest cross-validated accuracy (0.8635) is actually when we include all eight of our original input variables.  This is marginally higher than 6 included variables, and 7 included variables.  We will continue on with all 8.
 
 <br>
 ![alt text](/img/posts/lin-reg-feature-selection-plot.png "Linear Regression Feature Selection Plot")
