@@ -389,6 +389,8 @@ fit = feature_selector.fit(X_train,y_train)
 optimal_feature_count = feature_selector.n_features_
 print(f"Optimal number of features: {optimal_feature_count}")
 
+>> "Optimal number of features: 8"
+
 # limit our training & test sets to only include the selected variables
 X_train = X_train.loc[:, feature_selector.get_support()]
 X_test = X_test.loc[:, feature_selector.get_support()]
@@ -419,14 +421,14 @@ This creates the below plot, which shows us that the highest cross-validated acc
 <br>
 ### Model Training <a name="linreg-model-training"></a>
 
-Instantiating and training our Linear Regression model is done using the below code
+Instantiating and training our Linear Regression model is done using the below code:
 
 ```python
 
 # instantiate our model object
 regressor = LinearRegression()
 
-# fit our model using our training & test sets
+# fit our model using our training dataset
 regressor.fit(X_train, y_train)
 
 ```
@@ -436,7 +438,8 @@ regressor.fit(X_train, y_train)
 
 ##### Predict On The Test Set
 
-To assess how well our model is predicting on new data - we use the trained model object (here called *regressor*) and ask it to predict the *loyalty_score* variable for the test set
+To assess how well our model is predicting on new data - we use the trained model object (here called *regressor*) and ask it to predict the *loyalty_score* variable for each customer in the test set.
+In other words, we are taking the input data from the test set (X_test, data the model never saw) and feeding it into our trained model, which will produce a predicted output (loyalty_score) for each customer in the test set.
 
 ```python
 
@@ -445,18 +448,26 @@ y_pred = regressor.predict(X_test)
 
 ```
 
+Now we have two sets of *loyalty_scores* for the customers in the test set:
+* The ACTUAL values of the test set (y_test),
+* The PREDICTED values of the test set (y_pred) that our model produced.
+
+With this information, we can see how accurate our model is at predicting *loyalty_score*.
+
 <br>
 ##### Calculate R-Squared
 
 R-Squared is a metric that shows the percentage of variance in our output variable *y* that is being explained by our input variable(s) *x*.  It is a value that ranges between 0 and 1, with a higher value showing a higher level of explained variance.  Another way of explaining this would be to say that, if we had an r-squared score of 0.8 it would suggest that 80% of the variation of our output variable is being explained by our input variables - and something else, or some other variables must account for the other 20%
 
-To calculate r-squared, we use the following code where we pass in our *predicted* outputs for the test set (y_pred), as well as the *actual* outputs for the test set (y_test)
+To calculate r-squared, we use the following code where we pass in our *predicted* outputs for the test set (y_pred), as well as the *actual* outputs for the test set (y_test):
 
 ```python
 
 # calculate r-squared for our test set predictions
 r_squared = r2_score(y_test, y_pred)
 print(r_squared)
+
+>> 0.78
 
 ```
 
@@ -465,15 +476,15 @@ The resulting r-squared score from this is **0.78**
 <br>
 ##### Calculate Cross Validated R-Squared
 
-An even more powerful and reliable way to assess model performance is to utilise Cross Validation.
+An even more reliable way to assess model performance is to utilize Cross Validation.
 
-Instead of simply dividing our data into a single training set, and a single test set, with Cross Validation we break our data into a number of "chunks" and then iteratively train the model on all but one of the "chunks", test the model on the remaining "chunk" until each has had a chance to be the test set.
+Instead of simply dividing our data into a single training set, and a single test set, with Cross Validation we break our data into a number of "folds" and then iteratively train the model on all but one of the "folds" (training folds), then test the model on the remaining "fold" (test fold) until each has had a chance to be the test fold.
 
-The result of this is that we are provided a number of test set validation results - and we can take the average of these to give a much more robust & reliable view of how our model will perform on new, un-seen data!
+The result provides a number of test set validation results - and we can take the average of these to give a much more robust & reliable view of how our model will perform on new, unseen data.
 
-In the code below, we put this into place.  We first specify that we want 4 "chunks" and then we pass in our regressor object, training set, and test set.  We also specify the metric we want to assess with, in this case, we stick with r-squared.
+We first specify that we want 4 "folds". Then we pass in our model, training set, and test set.  We also specify the metric we want to assess with, in this case, we stick with r-squared.
 
-Finally, we take a mean of all four test set results.
+Finally, we take a mean of all four test set results to get the mean cross-validated r-squared score.
 
 ```python
 
@@ -483,6 +494,7 @@ cv_scores = cross_val_score(regressor, X_train, y_train, cv = cv, scoring = "r2"
 cv_scores.mean()
 
 ```
+
 
 The mean cross-validated r-squared score from this is **0.853**
 
@@ -500,6 +512,7 @@ num_data_points, num_input_vars = X_test.shape
 adjusted_r_squared = 1 - (1 - r_squared) * (num_data_points - 1) / (num_data_points - num_input_vars - 1)
 print(adjusted_r_squared)
 
+>> 0.754
 ```
 
 The resulting *adjusted* r-squared score from this is **0.754** which as expected, is slightly lower than the score we got for r-squared on it's own.
