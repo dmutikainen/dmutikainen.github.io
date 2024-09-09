@@ -674,14 +674,14 @@ X_test.drop(categorical_vars, axis = 1, inplace = True)
 <br>
 ### Model Training <a name="regtree-model-training"></a>
 
-Instantiating and training our Decision Tree model is done using the below code.  We use the *random_state* parameter to ensure we get reproducible results, and this helps us understand any improvements in performance with changes to model hyperparameters.
+Instantiating and training our Decision Tree model is done using the below code.  We use the *random_state* parameter to ensure we get reproducible results.
 
 ```python
 
 # instantiate our model object
 regressor = DecisionTreeRegressor(random_state = 42)
 
-# fit our model using our training & test sets
+# fit our model using our training set
 regressor.fit(X_train, y_train)
 
 ```
@@ -691,7 +691,7 @@ regressor.fit(X_train, y_train)
 
 ##### Predict On The Test Set
 
-To assess how well our model is predicting on new data - we use the trained model object (here called *regressor*) and ask it to predict the *loyalty_score* variable for the test set
+To assess how well our model is predicting on new data - we use the trained model object (here called *regressor*) and ask it to predict the *loyalty_score* variable for the test set:
 
 ```python
 
@@ -703,13 +703,15 @@ y_pred = regressor.predict(X_test)
 <br>
 ##### Calculate R-Squared
 
-To calculate r-squared, we use the following code where we pass in our *predicted* outputs for the test set (y_pred), as well as the *actual* outputs for the test set (y_test)
+To calculate r-squared, we use the following code where we pass in our *predicted* outputs for the test set (y_pred), as well as the *actual* outputs for the test set (y_test):
 
 ```python
 
 # calculate r-squared for our test set predictions
 r_squared = r2_score(y_test, y_pred)
 print(r_squared)
+
+>> 0.898
 
 ```
 
@@ -718,13 +720,9 @@ The resulting r-squared score from this is **0.898**
 <br>
 ##### Calculate Cross Validated R-Squared
 
-As we did when testing Linear Regression, we will again utilise Cross Validation.
+As we did when testing Linear Regression, we will again utilize Cross Validation to give us a more reliable view of how our model will perform on new data.
 
-Instead of simply dividing our data into a single training set, and a single test set, with Cross Validation we break our data into a number of "chunks" and then iteratively train the model on all but one of the "chunks", test the model on the remaining "chunk" until each has had a chance to be the test set.
-
-The result of this is that we are provided a number of test set validation results - and we can take the average of these to give a much more robust & reliable view of how our model will perform on new, un-seen data!
-
-In the code below, we put this into place.  We again specify that we want 4 "chunks" and then we pass in our regressor object, training set, and test set.  We also specify the metric we want to assess with, in this case, we stick with r-squared.
+In the code below, we put this into place.  We again specify that we want 4 "folds" and then we pass in our regressor object, training set, and test set.  We also specify the metric we want to assess with, in this case, we stick with r-squared.
 
 Finally, we take a mean of all four test set results.
 
@@ -751,6 +749,8 @@ num_data_points, num_input_vars = X_test.shape
 adjusted_r_squared = 1 - (1 - r_squared) * (num_data_points - 1) / (num_data_points - num_input_vars - 1)
 print(adjusted_r_squared)
 
+>> 0.887
+
 ```
 
 The resulting *adjusted* r-squared score from this is **0.887** which as expected, is slightly lower than the score we got for r-squared on it's own.
@@ -758,11 +758,11 @@ The resulting *adjusted* r-squared score from this is **0.887** which as expecte
 <br>
 ### Decision Tree Regularisation <a name="regtree-model-regularisation"></a>
 
-Decision Tree's can be prone to over-fitting, in other words, without any limits on their splitting, they will end up learning the training data perfectly.  We would much prefer our model to have a more *generalised* set of rules, as this will be more robust & reliable when making predictions on *new* data.
+Decision Tree's can be prone to over-fitting. Without any limits on their splitting, they will end up learning the training data perfectly.  We would much prefer our model to have a more generalised set of rules, as this will be more robust & reliable when making predictions on new data.
 
 One effective method of avoiding this over-fitting, is to apply a *max depth* to the Decision Tree, meaning we only allow it to split the data a certain number of times before it is required to stop.
 
-Unfortunately, we don't necessarily know the *best* number of splits to use for this - so below we will loop over a variety of values and assess which gives us the best predictive performance!
+Unfortunately, we don't necessarily know the *best* number of splits to use for this - so below we will loop over a variety of values and assess which gives us the best predictive performance.
 
 <br>
 ```python
@@ -798,7 +798,7 @@ plt.show()
 
 ```
 <br>
-That code gives us the below plot - which visualises the results!
+That code gives us the below plot - which visualizes the results:
 
 <br>
 ![alt text](/img/posts/regression-tree-max-depth-plot.png "Decision Tree Max Depth Plot")
@@ -834,7 +834,6 @@ That code gives us the below plot:
 ![alt text](/img/posts/regression-tree-nodes-plot.png "Decision Tree Max Depth Plot")
 
 <br>
-This is a very powerful visual, and one that can be shown to stakeholders in the business to ensure they understand exactly what is driving the predictions.
 
 One interesting thing to note is that the *very first split* appears to be using the variable *distance from store* so it would seem that this is a very important variable when it comes to predicting loyalty!
 
@@ -842,7 +841,7 @@ ___
 <br>
 # Random Forest <a name="rf-title"></a>
 
-We will again utlise the scikit-learn library within Python to model our data using a Random Forest. The code sections below are broken up into 4 key sections:
+We will again utlize the scikit-learn library within Python to model our data using a Random Forest. The code sections below are broken up into 4 key sections:
 
 * Data Import
 * Data Preprocessing
@@ -995,6 +994,8 @@ To calculate r-squared, we use the following code where we pass in our *predicte
 r_squared = r2_score(y_test, y_pred)
 print(r_squared)
 
+>> 0.957
+
 ```
 
 The resulting r-squared score from this is **0.957** - higher than both Linear Regression & the Decision Tree.
@@ -1002,7 +1003,7 @@ The resulting r-squared score from this is **0.957** - higher than both Linear R
 <br>
 ##### Calculate Cross Validated R-Squared
 
-As we did when testing Linear Regression & our Decision Tree, we will again utilise Cross Validation (for more info on how this works, please refer to the Linear Regression section above)
+As we did when testing Linear Regression & our Decision Tree, we will again utilize Cross Validation.
 
 ```python
 
@@ -1026,6 +1027,8 @@ Just like we did with Linear Regression & our Decision Tree, we will also calcul
 num_data_points, num_input_vars = X_test.shape
 adjusted_r_squared = 1 - (1 - r_squared) * (num_data_points - 1) / (num_data_points - num_input_vars - 1)
 print(adjusted_r_squared)
+
+>> 0.955
 
 ```
 
