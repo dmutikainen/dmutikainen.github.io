@@ -366,11 +366,11 @@ Feature Selection is the process used to select the input variables that are mos
 * **Lower Computational Cost** - our model becomes faster to train, and faster to make predictions
 * **Explainability** - understanding & explaining outputs for stakeholder & customers becomes much easier
 
-For our task we applied a variation of Recursive Feature Elimination called *Recursive Feature Elimination With Cross Validation (RFECV)*. RFECV is a combination of **RFE** (Recursive Feature Elimination) and **CV** (Cross Validation).
+For our task we applied a variation of Recursive Feature Elimination called ***Recursive Feature Elimination With Cross Validation (RFECV)***. RFECV is a combination of **RFE** (Recursive Feature Elimination) and **CV** (Cross Validation).
 
-* In **RFE**, a model is built using all features, checks which feature is the least important, removes the least important feature from the model, then repeats the process of buiding a model and removing the least important feature.
-* **CV** is a technique used to see how well a model is performing. A dataset is split into different parts, or "folds" - the model is trained on some folds and tested on the other folds - this ensures the model will work with unseen data and isn't just memorizing the rules from the training set.
-* Combined, **RFECV** is when CV is used at each step in the RFE process. In each iteration, a feature is eliminated and CV is used to test the accuracy of the model with the remaining features before the next iteration. 
+* **RFE**: This technique iteratively builds a model using all features, ranks the features based on their importance, and removes the least important feature. The process is repeated, eliminating one feature at a time, to improve model performance by reducing irrelevant or less important features.
+* **CV**: CV involves splitting the dataset into multiple "folds." The model is trained on some of the folds and tested on the others. This process is repeated several times, ensuring the model performs well on unseen data and is not overfitting or memorizing the training data.
+* Combined, we get **RFECV**: This technique combines RFE and CV by applying cross-validation at each step of the feature elimination process. After removing a feature, the model's accuracy is evaluated using CV to determine how well it performs with the remaining features. This ensures that the optimal subset of features is selected based on performance across multiple iterations, minimizing the chance of overfitting and improving generalization.
 
 In short, RFECV will help figure out what features are most useful for our model by removing unimportant ones step by step, while ensuring the model works will on any new data.
 
