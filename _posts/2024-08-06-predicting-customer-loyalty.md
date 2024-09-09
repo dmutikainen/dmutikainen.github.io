@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Predicting Customer Loyalty Using ML
+title: Predicting Customer Loyalty Using Regression (Linear Regression, Decision Tree, Random Forest)
 image: "/posts/regression-title-img.png"
 tags: [Customer Loyalty, Machine Learning, Regression, Python]
 ---
@@ -1037,33 +1037,26 @@ The resulting *adjusted* r-squared score from this is **0.955** which as expecte
 <br>
 ### Feature Importance <a name="rf-model-feature-importance"></a>
 
-In our Linear Regression model, to understand the relationships between input variables and our ouput variable, loyalty score, we examined the coefficients.  With our Decision Tree we looked at what the earlier splits were.  These allowed us some insight into which input variables were having the most impact.
+In our Linear Regression model, to understand the relationships between input variables and our ouput variable, we examined the coefficients.  With our Decision Tree we looked at what the algorithm used in earlier splits.  These allowed us some insight into which input variables were having the most impact.
 
-Random Forests are an ensemble model, made up of many, many Decision Trees, each of which is different due to the randomness of the data being provided, and the random selection of input variables available at each potential split point.
+Random Forests are an ensemble model, made up of many Decision Trees, each of which is different due to the randomness of the data being provided, and the random selection of input variables available at each potential split point.
 
-Because of this, we end up with a powerful and robust model, but because of the random or different nature of all these Decision trees - the model gives us a unique insight into how important each of our input variables are to the overall model.  
+Because of this, we end up with a powerful and robust model, but because of the random (different) nature of all these Decision trees - the model gives us a unique insight into how important each of our input variables are to the overall model.  
 
-As we’re using random samples of data, and input variables for each Decision Tree - there are many scenarios where certain input variables are being held back and this enables us a way to compare how accurate the models predictions are if that variable is or isn’t present.
+As we’re using random samples of data and input variables for each Decision Tree - there are many scenarios where certain input variables are being held back and this enables us a way to compare how accurate the models predictions are if that variable is or isn’t present.
 
-So, at a high level, in a Random Forest we can measure *importance* by asking *How much would accuracy decrease if a specific input variable was removed or randomised?*
+In a Random Forest we can measure *importance* by asking: ***How much would accuracy decrease if a specific input variable was removed or randomised?***
 
-If this decrease in performance, or accuracy, is large, then we’d deem that input variable to be quite important, and if we see only a small decrease in accuracy, then we’d conclude that the variable is of less importance.
+* If this decrease in performance, or accuracy, is large, then we’d deem that input variable to be important. 
+* If we see a small decrease in accuracy, then we’d conclude that the variable is of less importance.
 
-At a high level, there are two common ways to tackle this.  The first, often just called **Feature Importance** is where we find all nodes in the Decision Trees of the forest where a particular input variable is used to split the data and assess what the Mean Squared Error (for a Regression problem) was before the split was made, and compare this to the Mean Squared Error after the split was made.  We can take the *average* of these improvements across all Decision Trees in the Random Forest to get a score that tells us *how much better* we’re making the model by using that input variable.
+There are two common ways to answer this question an assess how important each feature is to our model:
 
-If we do this for *each* of our input variables, we can compare these scores and understand which is adding the most value to the predictive power of the model!
+1. **Feature Importance** is where we find all nodes in the Decision Trees of the forest where a particular feature is used to split the data and assess what the Mean Squared Error (for a Regression problem) was before the split was made, and compare this to the Mean Squared Error after the split was made.  We can take the *average* of these improvements across all Decision Trees in the Random Forest to get a score that tells us *how much better* we’re making the model by using that input variable.
 
-The other approach, often called **Permutation Importance** cleverly uses some data that has gone *unused* at when random samples are selected for each Decision Tree (this stage is called "bootstrap sampling" or "bootstrapping")
+2. **Permutation Importance** uses data that was *unused* when random samples are selected for each Decision Tree within the forest (this stage is called "bootstrapping"). These observations that were not randomly selected for each Decision Tree are known as *Out of Bag* observations and these can be used for testing the accuracy of each particular Decision Tree. For each Decision Tree, all of the *Out of Bag* observations are gathered and then passed through.  Once all of these observations have been run through the Decision Tree, we obtain an accuracy score for these predictions, which in the case of a regression problem could be Mean Squared Error or r-squared. In order to understand the *importance*, we *randomise* the values within one of the features - a process that essentially destroys any relationship that might exist between that feature and the output variable - and run that updated data through the Decision Tree again, obtaining a second accuracy score.  The difference between the original accuracy and the new accuracy gives us a view on how important that particular variable is for predicting the output.
 
-These observations that were not randomly selected for each Decision Tree are known as *Out of Bag* observations and these can be used for testing the accuracy of each particular Decision Tree.
-
-For each Decision Tree, all of the *Out of Bag* observations are gathered and then passed through.  Once all of these observations have been run through the Decision Tree, we obtain an accuracy score for these predictions, which in the case of a regression problem could be Mean Squared Error or r-squared.
-
-In order to understand the *importance*, we *randomise* the values within one of the input variables - a process that essentially destroys any relationship that might exist between that input variable and the output variable - and run that updated data through the Decision Tree again, obtaining a second accuracy score.  The difference between the original accuracy and the new accuracy gives us a view on how important that particular variable is for predicting the output.
-
-*Permutation Importance* is often preferred over *Feature Importance* which can at times inflate the importance of numerical features. Both are useful, and in most cases will give fairly similar results.
-
-Let's put them both in place, and plot the results...
+Let's put them both in place, and plot the results.
 
 <br>
 ```python
@@ -1099,7 +1092,7 @@ plt.show()
 
 ```
 <br>
-That code gives us the below plots - the first being for *Feature Importance* and the second for *Permutation Importance*!
+That code gives us the below plots - the first being for *Feature Importance* and the second for *Permutation Importance*
 
 <br>
 ![alt text](/img/posts/rf-regression-feature-importance.png "Random Forest Feature Importance Plot")
@@ -1108,9 +1101,7 @@ That code gives us the below plots - the first being for *Feature Importance* an
 ![alt text](/img/posts/rf-regression-permutation-importance.png "Random Forest Permutation Importance Plot")
 
 <br>
-The overall story from both approaches is very similar, in that by far, the most important or impactful input variable is *distance_from_store* which is the same insights we derived when assessing our Linear Regression & Decision Tree models.
-
-There are slight differences in the order or "importance" for the remaining variables but overall they have provided similar findings.
+The overall story from both approaches is very similar: the most important or impactful input variable is *distance_from_store* which is the same insights we derived when assessing our Linear Regression & Decision Tree models.
 
 ___
 <br>
@@ -1160,11 +1151,11 @@ import pandas as pd
 import pickle
 
 # import customers for scoring
-to_be_scored = ...
+to_be_scored = pickle.load(open("data/abc_regression_scoring.p", "rb"))
 
 # import model and model objects
-regressor = ...
-one_hot_encoder = ...
+regressor = pickle.load(open("data/random_forest_regression_model.p", "rb"))
+one_hot_encoder = pickle.load(open("data/random_forest_regression_ohe.p", "rb"))
 
 # drop unused columns
 to_be_scored.drop(["customer_id"], axis = 1, inplace = True)
@@ -1180,12 +1171,15 @@ encoder_vars_df = pd.DataFrame(encoder_vars_array, columns = encoder_feature_nam
 to_be_scored = pd.concat([to_be_scored.reset_index(drop=True), encoder_vars_df.reset_index(drop=True)], axis = 1)
 to_be_scored.drop(categorical_vars, axis = 1, inplace = True)
 
-# make our predictions!
+# make our predictions
 loyalty_predictions = regressor.predict(to_be_scored)
+
+# These predictions can now be added to the database for customers who did not have a loyalty score.
 
 ```
 <br>
-Just like that, we have made our *loyalty_score* predictions for these missing customers.  Due to the impressive metrics on the test set, we can be reasonably confident with these scores.  This extra customer information will ensure our client can undertake more accurate and relevant customer tracking, targeting, and comms.
+
+We have now made our *loyalty_score* predictions for the customers missing a loyalty score.  Due to the impressive metrics on the test set, we can be reasonably confident with these scores.  This extra customer information will ensure our client can undertake more accurate and relevant customer tracking, targeting, and communications.
 
 ___
 <br>
@@ -1195,4 +1189,4 @@ While predictive accuracy was relatively high - other modelling approaches could
 
 We could even look to tune the hyperparameters of the Random Forest, notably regularisation parameters such as tree depth, as well as potentially training on a higher number of Decision Trees in the Random Forest.
 
-From a data point of view, further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty
+From a data point of view, further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty.
