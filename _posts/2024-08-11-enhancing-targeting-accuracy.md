@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Enhancing Targeting Accuracy Using ML
+title: Enhancing Targeting Accuracy Using Classification (Logistic Regression, Decision Tree, Random Forest, KNN)
 image: "/posts/classification-title-img.png"
 tags: [Customer Targeting, Machine Learning, Classification, Python]
 ---
