@@ -63,6 +63,11 @@ For *Cluster 1* we saw quite high proportions of spend being allocated to Fruit 
 
 Finally customers in *Cluster 2* spent significant portions within Dairy, Fruit & Vegetables, but very little in the Meat product area - so similarly, we would make an early hypothesis that these customers are more along the lines of those following a vegetarian diet.
 
+There are two main takeaways:
+
+* Tracking these clusters over time would allow the client to more quickly react to dietary trends, and adjust their messaging and inventory accordingly.
+* Based upon these clusters, the client will be able to target customers more accurately - promoting products & discounts to customers that are truly relevant to them - overall enabling a more customer focused communication strategy.
+
 <br>
 <br>
 ### Growth/Next Steps <a name="overview-growth"></a>
@@ -343,6 +348,7 @@ That code results in the following table:
 * For *Cluster 1* we see quite high proportions of spend being allocated to Fruit & Vegetables, but very little to the Dairy & Meat product areas.  It could be hypothesised that these customers are following a vegan diet.  
 * Finally customers in *Cluster 2* spend, on average, significant portions within Dairy, Fruit & Vegetables, but very little in the Meat product area - so similarly, we would make an early hypothesis that these customers are more along the lines of those following a vegetarian diet.
 ___
+<br>
 <br>
 # Application <a name="kmeans-application"></a>
 
