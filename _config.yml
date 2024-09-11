@@ -9,7 +9,7 @@ plugins:
 #-------------------------------
 # General Site Settings
 title: David Mutikainen
-description: "Welcome to my data analytics portfolio, where I showcase a range of projects that apply statistical analysis, machine learning and data visualization to solve real-world problems. 
+description: "Welcome to my data analytics portfolio, where I showcase a range of projects that apply statistical analysis, machine learning and data visualization to solve real-world problems." 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
