@@ -9,7 +9,7 @@ plugins:
 #-------------------------------
 # General Site Settings
 title: David Mutikainen
-description: "Hi I'm David, and I'm a Data Scientist.  My portfolio focuses on interesting projects I've recently undertaken, with a strong emphasis on business impact. Please visit my LinkedIn page or download my Resume by using the links below."
+description: "Welcome to my data analytics portfolio, where I showcase a range of projects that apply statistical analysis, machine learning and data visualization to solve real-world problems. 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
