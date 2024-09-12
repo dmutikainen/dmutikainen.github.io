@@ -147,11 +147,12 @@ As we are predicting a binary output, we tested three classification modelling a
 * Logistic Regression
 * Decision Tree
 * Random Forest
+* KNN (K-Nearest-Neighbours)
 
 <br>
 # Logistic Regression <a name="logreg-title"></a>
 
-We utlise the scikit-learn library within Python to model our data using Logistic Regression. The code sections below are broken up into 5 key sections:
+We utlize the scikit-learn library within Python to model our data using Logistic Regression. The code sections below are broken up into 5 key sections:
 
 * Data Import
 * Data Preprocessing
@@ -194,7 +195,11 @@ data_for_model["signup_flag"].value_counts(normalize = True)
 
 ```
 <br>
-From the last step in the above code, we see that **69% of customers did not sign up and 31% did**.  This tells us that while the data isn't perfectly balanced at 50:50, it isn't *too* imbalanced either.  Because of this, and as you will see, we make sure to not rely on classification accuracy alone when assessing results - also analysing Precision, Recall, and F1-Score.
+From the last step in the above code, we see that: 
+* 69% of customers did NOT sign up
+* 31% of customers did sign up  
+
+This tells us that while the data isn't perfectly balanced at 50:50, it isn't *too* imbalanced either.  Because of this we will make sure to not rely on classification accuracy alone when assessing results - also analyzing Precision, Recall, and F1-Score.
 
 <br>
 ### Data Preprocessing <a name="logreg-preprocessing"></a>
