@@ -227,6 +227,10 @@ data_for_model = shuffle(data_for_model, random_state = 42)
 # assess class balance of dependent variable
 data_for_model["signup_flag"].value_counts(normalize = True)
 
+>> signup_flag
+>> 0    0.689535
+>> 1    0.310465
+
 ```
 <br>
 From the last step in the above code, we see that: 
@@ -254,14 +258,25 @@ The number of missing values in the data was extremely low, so instead of applyi
 
 # remove rows where values are missing
 data_for_model.isna().sum()
+
+>>
+signup_flag             0
+distance_from_store     5
+gender                  5
+credit_score            8
+total_sales             0
+total_items             0
+transaction_count       0
+product_area_count      0
+average_basket_value    0
+>>
+
 data_for_model.dropna(how = "any", inplace = True)
 
 ```
 
 <br>
 ##### Outliers
-
-The ability for a Logistic Regression model to generalise well across *all* data can be hampered if there are outliers present.  There is no right or wrong way to deal with outliers, but it is always something worth very careful consideration - just because a value is high or low, does not necessarily mean it should not be there!
 
 In this code section, we use **.describe()** from Pandas to investigate the spread of values for each of our predictors.  The results of this can be seen in the table below.
 
@@ -280,18 +295,20 @@ In this code section, we use **.describe()** from Pandas to investigate the spre
 <br>
 Based on this investigation, we see some *max* column values for several variables to be much higher than the *median* value.
 
-This is for columns *distance_from_store*, *total_sales*, and *total_items*
+This is for columns ***distance_from_store***, ***total_sales***, and ***total_items***
 
-For example, the median *distance_to_store* is 1.64 miles, but the maximum is over 400 miles!
+For example, the median ***distance_to_store*** is **1.64 miles**, but the maximum is over **400 miles**.
 
-Because of this, we apply some outlier removal in order to facilitate generalisation across the full dataset.
+Because of this, we apply some outlier removal in order to facilitate generalization. We do not want our model learning the general patterns of the data *plus the noise*. This will result in a model that doesn't predict very well on new data.
 
-We do this using the "boxplot approach" where we remove any rows where the values within those columns are outside of the interquartile range multiplied by 2.
+We do this using the *"boxplot approach"* where we remove rows where the values within those columns are outside of the interquartile range, multiplied by 2 (we don't want to remove too many outliers).
 
 <br>
 ```python
-
+# code to generate the table above
 outlier_investigation = data_for_model.describe()
+
+# columns containing outliers
 outlier_columns = ["distance_from_store", "total_sales", "total_items"]
 
 # boxplot approach
@@ -306,10 +323,16 @@ for column in outlier_columns:
     
     outliers = data_for_model[(data_for_model[column] < min_border) | (data_for_model[column] > max_border)].index
     print(f"{len(outliers)} outliers detected in column {column}")
+
+>> 8 outliers detected in column distance_from_store
+>> 54 outliers detected in column total_sales
+>> 3 outliers detected in column total_items
     
     data_for_model.drop(outliers, inplace = True)
 
 ```
+
+We removed 65 customers from the dataset - now our model is going to be built based on the data of 795 customers instead of 860.
 
 <br>
 ##### Split Out Data For Modelling
