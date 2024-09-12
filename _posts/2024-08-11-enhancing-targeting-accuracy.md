@@ -5,7 +5,7 @@ image: "/posts/classification-title-img.png"
 tags: [Customer Targeting, Machine Learning, Classification, Python]
 ---
 
-Our client, a grocery retailer, wants to utilise Machine Learning to reduce mailing costs, and improve ROI!
+Our client, a grocery retailer, wants to utilize Machine Learning to reduce mailing costs, and improve ROI.
 
 # Table of contents
 
@@ -32,18 +32,17 @@ ___
 
 Our client, a grocery retailer, sent out mailers in a marketing campaign for their new *delivery club*.  This cost customers $100 per year for membership, and offered free grocery deliveries, rather than the normal cost of $10 per delivery.
 
-For this, they sent mailers to their entire customer base (apart from a control group) but this proved expensive.  For the next batch of communications they would like to save costs by *only* mailing customers that were likely to sign up.
+For this, they sent mailers to their entire customer base (apart from a control group) but this proved expensive.  For the next batch of communications they would like to save costs by *only* mailing customers that are likely to sign up.
 
-Based upon the results of the last campaign and the customer data available, we will look to understand the *probability* of customers signing up for the *delivery club*.  This would allow the client to mail a more targeted selection of customers, lowering costs, and improving ROI.
-
-Let's use Machine Learning to take on this task!
+Based upon the results of the last campaign and the customer data available, we will look to understand the *probability* of customers signing up for the delivery club.  This will allow us to classify them into one of two groups (Likely to sign up, and unlikely to sign up), and would allow the client to mail a more targeted selection of customers, lowering costs, and improving ROI.
 <br>
 <br>
+
 ### Actions <a name="overview-actions"></a>
 
-We firstly needed to compile the necessary data from tables in the database, gathering key customer metrics that may help predict *delivery club* membership.
+Within our historical dataset from the last campaign, we found that 69% of customers did not sign up and 31% did. Our first action was to compile the necessary customer data from tables in the database - we will use key customer metrics to help predict the customers that are likely to sign up for the delivery club membership. 
 
-Within our historical dataset from the last campaign, we found that 69% of customers did not sign up and 31% did.  This tells us that while the data isn't perfectly balanced at 50:50, it isn't *too* imbalanced either.  Even so, we make sure to not rely on classification accuracy alone when assessing results - also analysing Precision, Recall, and F1-Score.
+While the data isn't perfectly balanced at 50:50, it isn't *too* imbalanced either.  Even so, we make sure to not rely on classification accuracy alone when assessing results. We also analyze Precision, Recall, and F1-Score.
 
 As we are predicting a binary output, we tested four classification modelling approaches, namely:
 
@@ -52,15 +51,18 @@ As we are predicting a binary output, we tested four classification modelling ap
 * Random Forest
 * K Nearest Neighbours (KNN)
 
-For each model, we will import the data in the same way but will need to pre-process the data based up the requirements of each particular algorithm.  We will train & test each model, look to refine each to provide optimal performance, and then measure this predictive performance based on several metrics to give a well-rounded overview of which is best.
+For each model, we will import the data in the same way but will need to pre-process the data based up the requirements of each particular algorithm.  We will train & test each model, refine each to provide optimal performance, and then measure the predictive performance to determine which algorithm is best at predicting the customers we want to target with the mailer.
 <br>
 <br>
 
 ### Results <a name="overview-results"></a>
 
-The goal for the project was to build a model that would accurately predict the customers that would sign up for the *delivery club*.  This would allow for a much more targeted approach when running the next iteration of the campaign.  A secondary goal was to understand what the drivers for this are, so the client can get closer to the customers that need or want this service, and enhance their messaging.
+The goal for the project was to build a model that would accurately predict the customers that would sign up for the *delivery club*.  This would allow for a more targeted approach when running the next iteration of the campaign. By doing this, we uncover what the key drivers are (the most common features of those who sign up), and this data can lend itself to other projects.
 
-Based upon these, the chosen the model is the Random Forest as it was a) the most consistently performant on the test set across classication accuracy, precision, recall, and f1-score, and b) the feature importance and permutation importance allows the client an understanding of the key drivers behind *delivery club* signups.
+After testing all four models, the **Random Forest** was chosen as it: 
+
+* a) was the most consistently performant across classication accuracy, precision, recall, and f1-score,
+* b) the feature importance and permutation importance allows the client an understanding of the key drivers behind *delivery club* signups.
 
 <br>
 **Metric 1: Classification Accuracy**
@@ -95,11 +97,16 @@ Based upon these, the chosen the model is the Random Forest as it was a) the mos
 * Logistic Regression = 0.734
 <br>
 <br>
+
 ### Growth/Next Steps <a name="overview-growth"></a>
 
-While predictive accuracy was relatively high - other modelling approaches could be tested, especially those somewhat similar to Random Forest, for example XGBoost, LightGBM to see if even more accuracy could be gained.
+After this project, we are able to target the right customers for the delivery club, but we can use the data for other endeavours.
 
-From a data point of view, further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty
+Regarding the delivery club - further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting what customers are likely to sign up for the delivery club.
+
+We also know the features of customers who aren't likely to sign up for the delivery club - we can look into why that is. 
+* If not interested in a delivery club, perhaps they are more likely to sign up for a service that could be offered on site.
+* Or, perhaps messaging is adjusted in the mailer in a way that keeps the attention of those interested in the club, AND to entice customers who weren't keen on delivery initially.
 <br>
 <br>
 ___
@@ -110,9 +117,9 @@ We will be predicting the binary *signup_flag* metric from the *campaign_data* t
 
 The key variables hypothesised to predict this will come from the client database, namely the *transactions* table, the *customer_details* table, and the *product_areas* table.
 
-We aggregated up customer data from the 3 months prior to the last campaign.
+We aggregated customer data from the 3 months prior to the last campaign.
 
-After this data pre-processing in Python, we have a dataset for modelling that contains the following fields...
+After this data pre-processing in Python, we have a dataset for modelling that contains the following fields:
 <br>
 <br>
 
