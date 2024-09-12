@@ -9,13 +9,13 @@ plugins:
 #-------------------------------
 # General Site Settings
 title: David Mutikainen
-description: "Welcome to my data analytics portfolio, where I showcase a range of projects that apply statistical analysis, machine learning and data visualization to solve real-world problems." 
+description: "Welcome to my data science portfolio, where I showcase a range of projects that apply statistical analysis, machine learning and data visualization to uncover insights and solve real-world problems." 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
 #-------------------------------
 # About Section
-subtitle: Data Science <span style="color:#f58506"> Portfolio </span>
+subtitle: <span style="color:#f58506"> Data Science Portfolio </span>
 location: "Ontario, Canada"
 resume_url: /docs/David_Mutikainen_Resume.pdf
 avatar_image: /img/dsi_cropped.jpg
