@@ -115,10 +115,44 @@ ___
 
 We will be predicting the binary *signup_flag* metric from the *campaign_data* table in the client database.
 
-The key variables hypothesised to predict this will come from the client database, namely the *transactions* table, the *customer_details* table, and the *product_areas* table.
+The key variables hypothesised to predict this will come from the client database. We will need to merge the *transactions* table, the *customer_details* table, and the *campaign_data* table.
 
 We aggregated customer data from the 3 months prior to the last campaign.
 
+```python
+# import required packages
+import pandas as pd
+import pickle
+
+# load required data
+transactions = pd.read_excel("data/grocery_database.xlsx", sheet_name = "transactions")
+customer_details = pd.read_excel("data/grocery_database.xlsx", sheet_name = "customer_details")
+campaign_data = pd.read_excel("data/grocery_database.xlsx", sheet_name = "campaign_data")
+
+# based on the past 3 months, aggregate total purchases, total items bought, total transactions and total amount of unique product areas per customer
+agg_sales = transactions.loc[lambda x: x["transaction_date"] > "2020-07-01"].groupby("customer_id").agg({
+    "sales_cost" : "sum",
+    "num_items" : "sum",
+    "transaction_id" : "nunique",
+    "product_area_id" : "nunique"}).reset_index()
+
+# rename columns
+agg_sales.columns = ["customer_id", "total_sales", "total_items", "transaction_count", "product_area_count"]
+
+# create a new column to indicate the customers average $ spent per transaction
+agg_sales["average_basket_value"] = agg_sales["total_sales"] / agg_sales["transaction_count"]
+
+# merge aggregate sales data with customer details (gender, distance to store, credit score)
+delivery_club_modelling = pd.merge(agg_sales,customer_details, on = "customer_id", how = "inner")
+
+# merge working dataframe with the campaign data, indicating if the customer signed up for the previous delivery club campaign
+delivery_club_modelling  = pd.merge(delivery_club_modelling, campaign_data[["customer_id", "signup_flag"]], how = "inner", on = "customer_id")
+
+# pickle the data so we can import it later
+pickle.dump(delivery_club_modelling, open("data/delivery_club_modelling.p", "wb"))
+```
+<br>
+<br>
 After this data pre-processing in Python, we have a dataset for modelling that contains the following fields:
 <br>
 <br>
