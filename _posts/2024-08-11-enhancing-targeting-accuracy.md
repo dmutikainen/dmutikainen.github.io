@@ -234,7 +234,7 @@ data_for_model["signup_flag"].value_counts(normalize = True)
 ```
 <br>
 From the last step in the above code, we see that: 
-* 69% of customers did NOT sign up
+* 69% of customers did NOT sign up for the delivery club during the last campaign
 * 31% of customers did sign up  
 
 This tells us that while the data isn't perfectly balanced at 50:50, it isn't *too* imbalanced either.  Because of this we will make sure to not rely on classification accuracy alone when assessing results - also analyzing Precision, Recall, and F1-Score.
@@ -337,9 +337,13 @@ We removed 65 customers from the dataset - now our model is going to be built ba
 <br>
 ##### Split Out Data For Modelling
 
-In the next code block we do two things, we firstly split our data into an **X** object which contains only the predictor variables, and a **y** object that contains only our dependent variable.
+In the next code block we split our data into:
+* **X** object which contains only the predictor variables,
+* **y** object that contains only our dependent variable.
 
-Once we have done this, we split our data into training and test sets to ensure we can fairly validate the accuracy of the predictions on data that was not used in training.  In this case, we have allocated 80% of the data for training, and the remaining 20% for validation.  We make sure to add in the *stratify* parameter to ensure that both our training and test sets have the same proportion of customers who did, and did not, sign up for the *delivery club* - meaning we can be more confident in our assessment of predictive performance.
+We then split our data into training and test sets.
+In this case, we have allocated 80% of the data for training, and the remaining 20% for testing/validation.
+We make sure to add in the *stratify* parameter to ensure that both our training and test sets have the same proportion of customers who did, and did not, sign up for the *delivery club*.
 
 <br>
 ```python
