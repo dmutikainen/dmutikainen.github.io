@@ -85,8 +85,6 @@ As the most important outcome for this project was predictive accuracy, rather t
 
 Once we calculated that a Random Forest was the best approach to use, we can predict the loyalty scores for customers who did not have one. Once the client has a complete set of customers with how loyal they are, the client can adjust their marketing plans to drive more business.
 
-While predictive accuracy was relatively high - other modelling approaches could be tested, for example XGBoost, LightGBM to see if even more accuracy could be gained.
-
 From a data point of view, further variables could be collected (customer metrics), and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty.
 <br>
 <br>
@@ -179,7 +177,7 @@ ___
 <br>
 # Linear Regression <a name="linreg-title"></a>
 
-We utlise the scikit-learn library within Python to model our data using Linear Regression. The code sections below are broken up into 4 key sections:
+We utlize the scikit-learn library within Python to model our data using Linear Regression. The code sections below are broken up into 4 key sections:
 
 * Data Import
 * Data Preprocessing
@@ -756,9 +754,9 @@ print(adjusted_r_squared)
 The resulting *adjusted* r-squared score from this is **0.887** which as expected, is slightly lower than the score we got for r-squared on it's own.
 
 <br>
-### Decision Tree Regularisation <a name="regtree-model-regularisation"></a>
+### Decision Tree Regularization <a name="regtree-model-regularisation"></a>
 
-Decision Tree's can be prone to over-fitting. Without any limits on their splitting, they will end up learning the training data perfectly.  We would much prefer our model to have a more generalised set of rules, as this will be more robust & reliable when making predictions on new data.
+Decision Tree's can be prone to over-fitting. Without any limits on their splitting, they will end up learning the training data perfectly.  We would much prefer our model to have a more generalized set of rules, as this will be more robust & reliable when making predictions on new data.
 
 One effective method of avoiding this over-fitting, is to apply a *max depth* to the Decision Tree, meaning we only allow it to split the data a certain number of times before it is required to stop.
 
@@ -1185,8 +1183,6 @@ ___
 <br>
 # Growth & Next Steps <a name="growth-next-steps"></a>
 
-While predictive accuracy was relatively high - other modelling approaches could be tested, especially those somewhat similar to Random Forest, for example XGBoost, LightGBM to see if even more accuracy could be gained.
-
-We could even look to tune the hyperparameters of the Random Forest, notably regularisation parameters such as tree depth, as well as potentially training on a higher number of Decision Trees in the Random Forest.
+We could look to tune the hyperparameters of the Random Forest, notably regularization parameters such as tree depth, as well as potentially training on a higher number of Decision Trees in the Random Forest.
 
 From a data point of view, further variables could be collected, and further feature engineering could be undertaken to ensure that we have as much useful information available for predicting customer loyalty.
