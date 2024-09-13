@@ -362,15 +362,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 
 In our dataset, we have one categorical variable *gender* which has values of "M" for Male, "F" for Female, and "U" for Unknown.
 
-The Logistic Regression algorithm can't deal with data in this format as it can't assign any numerical meaning to it when looking to assess the relationship between the variable and the dependent variable.
+The Linear Regression algorithm can't deal with data in this format as it can't assign any numerical meaning to it when looking to assess the relationship between the variable and the dependent variable.
 
-As *gender* doesn't have any explicit *order* to it, in other words, Male isn't higher or lower than Female and vice versa - one appropriate approach is to apply One Hot Encoding to the categorical column.
+As *gender* doesn't have any explicit *order* to it, in other words, Male isn't higher or lower than Female and vice versa - one appropriate approach is to apply *One Hot Encoding* to the categorical column.
 
-One Hot Encoding can be thought of as a way to represent categorical variables as binary vectors, in other words, a set of *new* columns for each categorical value with either a 1 or a 0 saying whether that value is true or not for that observation.  These new columns would go into our model as input variables, and the original column is discarded.
+*One Hot Encoding* can be thought of as a way to represent categorical variables as binary vectors, in other words, a set of *new* columns for each categorical value with either a 1 or a 0 saying whether that value is true or not for that observation (ex. two new columns named *Male* and *Female* are created, and if the customer is a Male, a 1 would be listed in the *Male* column and a 0 would be listed in the *Female* column).  These new columns would go into our model as input variables, and the original column is discarded.
 
-We also drop one of the new columns using the parameter *drop = "first"*.  We do this to avoid the *dummy variable trap* where our newly created encoded columns perfectly predict each other - and we run the risk of breaking the assumption that there is no multicollinearity, a requirement or at least an important consideration for some models, Linear Regression being one of them! Multicollinearity occurs when two or more input variables are *highly* correlated with each other, it is a scenario we attempt to avoid as in short, while it won't neccessarily affect the predictive accuracy of our model, it can make it difficult to trust the statistics around how well the model is performing, and how much each input variable is truly having.
+We also drop one of the new columns using the parameter *drop = "first"*.  We do this to avoid the *dummy variable trap* where our newly created encoded columns perfectly predict each other - and we run the risk of breaking the assumption that there is no multicollinearity. Multicollinearity occurs when two or more input variables are *highly* correlated with each other. 
 
-In the code, we also make sure to apply *fit_transform* to the training set, but only *transform* to the test set.  This means the One Hot Encoding logic will *learn and apply* the "rules" from the training data, but only *apply* them to the test data.  This is important in order to avoid *data leakage* where the test set *learns* information about the training data, and means we can't fully trust model performance metrics!
+In the code, we also make sure to apply *fit_transform* to the training set, but only *transform* to the test set.  This means the *One Hot Encoding* logic will *learn and apply* the "rules" from the training data, but only *apply* them to the test data.  This is important in order to avoid *data leakage* where the test set *learns* information about the training data, and means we can't fully trust model performance metrics.
 
 For ease, after we have applied One Hot Encoding, we turn our training and test objects back into Pandas Dataframes, with the column names applied.
 
@@ -404,20 +404,20 @@ X_test.drop(categorical_vars, axis = 1, inplace = True)
 <br>
 ##### Feature Selection
 
-Feature Selection is the process used to select the input variables that are most important to your Machine Learning task.  It can be a very important addition or at least, consideration, in certain scenarios.  The potential benefits of Feature Selection are:
+Feature Selection is the process used to select the input variables that are most important to your Machine Learning task. The potential benefits of Feature Selection are:
 
 * **Improved Model Accuracy** - eliminating noise can help true relationships stand out
 * **Lower Computational Cost** - our model becomes faster to train, and faster to make predictions
 * **Explainability** - understanding & explaining outputs for stakeholder & customers becomes much easier
 
-There are many, many ways to apply Feature Selection.  These range from simple methods such as a *Correlation Matrix* showing variable relationships, to *Univariate Testing* which helps us understand statistical relationships between variables, and then to even more powerful approaches like *Recursive Feature Elimination (RFE)* which is an approach that starts with all input variables, and then iteratively removes those with the weakest relationships with the output variable.
+There are many ways to apply Feature Selection.  These range from simple methods such as a *Correlation Matrix* showing variable relationships, to *Univariate Testing* which helps us understand statistical relationships between variables, and then to even more powerful approaches like *Recursive Feature Elimination (RFE)* which is an approach that starts with all input variables, and then iteratively removes those with the weakest relationships with the output variable.
 
 For our task we applied a variation of Reursive Feature Elimination called *Recursive Feature Elimination With Cross Validation (RFECV)* where we split the data into many "chunks" and iteratively trains & validates models on each "chunk" seperately.  This means that each time we assess different models with different variables included, or eliminated, the algorithm also knows how accurate each of those models was.  From the suite of model scenarios that are created, the algorithm can determine which provided the best accuracy, and thus can infer the best set of input variables to use!
 
 <br>
 ```python
 
-# instantiate RFECV & the model type to be utilised
+# instantiate RFECV & the model type to be utilized
 clf = LogisticRegression(random_state = 42, max_iter = 1000)
 feature_selector = RFECV(clf)
 
@@ -435,7 +435,7 @@ X_test = X_test.loc[:, feature_selector.get_support()]
 ```
 
 <br>
-The below code then produces a plot that visualises the cross-validated classification accuracy with each potential number of features
+The below code then produces a plot that visualizes the cross-validated classification accuracy with each potential number of features:
 
 ```python
 
@@ -450,7 +450,7 @@ plt.show()
 ```
 
 <br>
-This creates the below plot, which shows us that the highest cross-validated classification accuracy (0.904) is when we include seven of our original input variables.  The variable that has been dropped is *total_sales* but from the chart we can see that the difference is negligible.  However, we will continue on with the selected seven!
+This creates the below plot, which shows us that the highest cross-validated classification accuracy (0.904) is when we include 7 of our original input variables.  The variable that has been dropped is *total_sales* but from the chart we can see that the difference is negligible.  We will continue on with the selected seven.
 
 <br>
 ![alt text](/img/posts/log-reg-feature-selection-plot.png "Logistic Regression Feature Selection Plot")
@@ -458,8 +458,7 @@ This creates the below plot, which shows us that the highest cross-validated cla
 <br>
 ### Model Training <a name="logreg-model-training"></a>
 
-Instantiating and training our Logistic Regression model is done using the below code.  We use the *random_state* parameter to ensure reproducible results, meaning any refinements can be compared to past results.  We also specify *max_iter = 1000* to allow the solver more attempts at finding an optimal regression line, as the default value of 100 was not enough.
-
+Instantiating and training our Logistic Regression model is done using the below code.  We use the *random_state* parameter to ensure reproducible results, meaning any refinements can be compared to past results.  We also specify *max_iter = 1000* to allow more attempts at finding an optimal regression line.
 ```python
 
 # instantiate our model object
@@ -475,9 +474,11 @@ clf.fit(X_train, y_train)
 
 ##### Predict On The Test Set
 
-To assess how well our model is predicting on new data - we use the trained model object (here called *clf*) and ask it to predict the *signup_flag* variable for the test set.
+To assess how well our model is predicting on new data - we use the trained model object (*clf*) and ask it to predict the *signup_flag* variable for the test set.
 
-In the code below we create one object to hold the binary 1/0 predictions, and another to hold the actual prediction probabilities for the positive class.
+In the code below we create one object to hold the binary 1/0 predictions, and another to hold the prediction probabilities for the positive class.
+
+Note: as of right now, the threshold for determing a positive (1) or negative (0) class is the default 50%. We will address this shortly.
 
 ```python
 
@@ -516,20 +517,29 @@ plt.show()
 ![alt text](/img/posts/log-reg-confusion-matrix.png "Logistic Regression Confusion Matrix")
 
 <br>
-The aim is to have a high proportion of observations falling into the top left cell (predicted non-signup and actual non-signup) and the bottom right cell (predicted signup and actual signup).
+The aim is to have a high proportion of observations falling into the top left cell (correctly predicted customers who didn't sign up) and the bottom right cell (correctly predicted customers who signed up).
 
-Since the proportion of signups in our data was around 30:70 we will next analyse not only Classification Accuracy, but also Precision, Recall, and F1-Score which will help us assess how well our model has performed in reality.
+Since the proportion of signups in our data was around 30:70 we will next analyze not only Classification Accuracy, but also Precision, Recall, and F1-Score which will help us assess how well our model has performed in reality.
 
 <br>
 ##### Classification Performance Metrics
 <br>
 **Classification Accuracy**
 
-Classification Accuracy is a metric that tells us *of all predicted observations, what proportion did we correctly classify*.  This is very intuitive, but when dealing with imbalanced classes, can be misleading.  
+Classification Accuracy is a metric that tells us - *out of all predicted observations, what proportion did we correctly classify?*.  
+It's a solid, simple way to evaluate our model - but - when dealing with imbalanced classes, it can be misleading.  
 
-An example of this could be a rare disease. A model with a 98% Classification Accuracy on might appear like a fantastic result, but if our data contained 98% of patients *without* the disease, and 2% *with* the disease - then a 98% Classification Accuracy could be obtained simply by predicting that *no one* has the disease - which wouldn't be a great model in the real world.  Luckily, there are other metrics which can help us!
+For example, if we have data on a rare disease and 98% of patients have the disease, and 2% don't. Without even building a model based on real data, we could predict that 100% of the patients have the disease - and we'd be 98% accurate.
 
-In this example of the rare disease, we could define Classification Accuracy as *of all predicted patients, what proportion did we correctly classify as either having the disease, or not having the disease*
+Without thinking about it, being 98% accurate sounds great. But in the case of rare diseases, we'd want to be more vigilant. 
+In our hypothetical example, this would mean for 2% of the time, we would be: 
+
+* predicting someone NOT having a disease, when they actually do
+* predicting someone having a disease, when they actually don't
+
+Both cases are not ideal. We'd want to be make a prediction based on a model built on real data, that was properly evaluated.
+
+To properly evaluate a model with imbalanced data, we can look at Precision, Recall and F1 Score.
 
 <br>
 **Precision & Recall**
