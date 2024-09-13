@@ -360,19 +360,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 <br>
 ##### Categorical Predictor Variables
 
-In our dataset, we have one categorical variable *gender* which has values of "M" for Male, "F" for Female, and "U" for Unknown.
+We have one categorical variable *gender* which has values of "M" for Male, "F" for Female, and "U" for Unknown.
 
-The Linear Regression algorithm can't deal with data in this format as it can't assign any numerical meaning to it when looking to assess the relationship between the variable and the dependent variable.
+The Logistic Regression algorithm can't deal with data in this format as it can't assign any numerical meaning to it when looking to assess the relationship between the variable and the dependent variable.
 
-As *gender* doesn't have any explicit *order* to it, in other words, Male isn't higher or lower than Female and vice versa - one appropriate approach is to apply *One Hot Encoding* to the categorical column.
+As *gender* doesn't have any explicit *order* to it, in other words, Male isn't higher or lower than Female and vice versa - one appropriate approach is to apply ***One Hot Encoding***.
 
-*One Hot Encoding* can be thought of as a way to represent categorical variables as binary vectors, in other words, a set of *new* columns for each categorical value with either a 1 or a 0 saying whether that value is true or not for that observation (ex. two new columns named *Male* and *Female* are created, and if the customer is a Male, a 1 would be listed in the *Male* column and a 0 would be listed in the *Female* column).  These new columns would go into our model as input variables, and the original column is discarded.
+***One Hot Encoding*** is a way to represent categorical variables as binary vectors, in other words, a set of *new* columns for each categorical value with either a 1 or a 0 indicating whether that value is true or not for that observation (ex. two new columns named *Male* and *Female* are created, and if the customer is a Male, a 1 would be listed in the *Male* column and a 0 would be listed in the *Female* column).  These new columns would go into our model as input variables, and the original column is discarded.
 
-We also drop one of the new columns using the parameter *drop = "first"*.  We do this to avoid the *dummy variable trap* where our newly created encoded columns perfectly predict each other - and we run the risk of breaking the assumption that there is no multicollinearity. Multicollinearity occurs when two or more input variables are *highly* correlated with each other. 
+We also drop one of the new columns using the parameter *drop = "first"*.  We do this to avoid the *dummy variable trap* where our newly created encoded columns perfectly predict each other - and we run the risk of breaking the assumption that there is no multicollinearity. Multicollinearity occurs when two or more input variables are *highly* correlated with each other.
 
 In the code, we also make sure to apply *fit_transform* to the training set, but only *transform* to the test set.  This means the *One Hot Encoding* logic will *learn and apply* the "rules" from the training data, but only *apply* them to the test data.  This is important in order to avoid *data leakage* where the test set *learns* information about the training data, and means we can't fully trust model performance metrics.
-
-For ease, after we have applied One Hot Encoding, we turn our training and test objects back into Pandas Dataframes, with the column names applied.
 
 <br>
 ```python
@@ -390,7 +388,7 @@ X_test_encoded = one_hot_encoder.transform(X_test[categorical_vars])
 # extract feature names for encoded columns
 encoder_feature_names = one_hot_encoder.get_feature_names_out(categorical_vars)
 
-# turn objects back to pandas dataframe
+# turn encoded results to a dataframe, append them to the full dataset, then drop the original Gender column
 X_train_encoded = pd.DataFrame(X_train_encoded, columns = encoder_feature_names)
 X_train = pd.concat([X_train.reset_index(drop=True), X_train_encoded.reset_index(drop=True)], axis = 1)
 X_train.drop(categorical_vars, axis = 1, inplace = True)
