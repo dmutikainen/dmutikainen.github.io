@@ -408,9 +408,15 @@ Feature Selection is the process used to select the input variables that are mos
 * **Lower Computational Cost** - our model becomes faster to train, and faster to make predictions
 * **Explainability** - understanding & explaining outputs for stakeholder & customers becomes much easier
 
-There are many ways to apply Feature Selection.  These range from simple methods such as a *Correlation Matrix* showing variable relationships, to *Univariate Testing* which helps us understand statistical relationships between variables, and then to even more powerful approaches like *Recursive Feature Elimination (RFE)* which is an approach that starts with all input variables, and then iteratively removes those with the weakest relationships with the output variable.
+For our task we applied a variation of Recursive Feature Elimination called ***Recursive Feature Elimination With Cross Validation (RFECV)***. RFECV is a combination of **RFE** (Recursive Feature Elimination) and **CV** (Cross Validation).
 
-For our task we applied a variation of Reursive Feature Elimination called *Recursive Feature Elimination With Cross Validation (RFECV)* where we split the data into many "chunks" and iteratively trains & validates models on each "chunk" seperately.  This means that each time we assess different models with different variables included, or eliminated, the algorithm also knows how accurate each of those models was.  From the suite of model scenarios that are created, the algorithm can determine which provided the best accuracy, and thus can infer the best set of input variables to use!
+* **RFE**: This technique iteratively builds a model using all features, ranks the features based on their importance, and removes the least important feature. The process is repeated, eliminating one feature at a time, to improve model performance by reducing irrelevant or less important features.
+* **CV**: CV involves splitting the dataset into multiple "folds." The model is trained on some of the folds and tested on the others. This process is repeated several times, ensuring the model performs well on unseen data and is not overfitting or memorizing the training data.
+* Combined, we get **RFECV**: This technique combines RFE and CV by applying cross-validation at each step of the feature elimination process. After removing a feature, the model's accuracy is evaluated using CV to determine how well it performs with the remaining features. This ensures that the optimal subset of features is selected based on performance across multiple iterations, minimizing the chance of overfitting and improving generalization.
+
+In short, RFECV will help figure out what features are most useful for our model by removing unimportant ones step by step, while ensuring the model works well on any new data.
+
+We will first run RFECV on our training set to identify the most important features. We then create a plot to visualize the accuracy of our model with each potential number of features.
 
 <br>
 ```python
@@ -419,7 +425,7 @@ For our task we applied a variation of Reursive Feature Elimination called *Recu
 clf = LogisticRegression(random_state = 42, max_iter = 1000)
 feature_selector = RFECV(clf)
 
-# fit RFECV onto our training & test data
+# fit RFECV onto our training data
 fit = feature_selector.fit(X_train,y_train)
 
 # extract & print the optimal number of features
@@ -462,7 +468,7 @@ Instantiating and training our Logistic Regression model is done using the below
 # instantiate our model object
 clf = LogisticRegression(random_state = 42, max_iter = 1000)
 
-# fit our model using our training & test sets
+# fit our model using our training data
 clf.fit(X_train, y_train)
 
 ```
@@ -472,11 +478,9 @@ clf.fit(X_train, y_train)
 
 ##### Predict On The Test Set
 
-To assess how well our model is predicting on new data - we use the trained model object (*clf*) and ask it to predict the *signup_flag* variable for the test set.
+To assess how well our model is predicting on new data - we use the trained model object (*clf*) and ask it to predict the *signup_flag* variable by feeding it the inputs from the test set.
 
 In the code below we create one object to hold the binary 1/0 predictions, and another to hold the prediction probabilities for the positive class.
-
-Note: as of right now, the threshold for determing a positive (1) or negative (0) class is the default 50%. We will address this shortly.
 
 ```python
 
@@ -491,7 +495,7 @@ y_pred_prob = clf.predict_proba(X_test)[:,1]
 
 A Confusion Matrix provides us a visual way to understand how our predictions match up against the actual values for those test set observations.
 
-The below code creates the Confusion Matrix using the *confusion_matrix* functionality from within scikit-learn and then plots it using matplotlib.
+The below code creates the Confusion Matrix using the *confusion_matrix* functionality from scikit-learn and then plots it using matplotlib.
 
 ```python
 
@@ -515,9 +519,9 @@ plt.show()
 ![alt text](/img/posts/log-reg-confusion-matrix.png "Logistic Regression Confusion Matrix")
 
 <br>
-The aim is to have a high proportion of observations falling into the top left cell (correctly predicted customers who didn't sign up) and the bottom right cell (correctly predicted customers who signed up).
+The aim is to have a high proportion of observations falling into the top left cell (correctly predicting customers who didn't sign up) and the bottom right cell (correctly predicting customers who did signed up).
 
-Since the proportion of signups in our data was around 30:70 we will next analyze not only Classification Accuracy, but also Precision, Recall, and F1-Score which will help us assess how well our model has performed in reality.
+Since the proportion of signups in our data was around 30:70 we will next analyze not only Classification Accuracy, but also Precision, Recall, and F1-Score, which will help us assess how well our model has performed in reality.
 
 <br>
 ##### Classification Performance Metrics
@@ -535,36 +539,34 @@ In our hypothetical example, this would mean for 2% of the time, we would be:
 * predicting someone NOT having a disease, when they actually do
 * predicting someone having a disease, when they actually don't
 
-Both cases are not ideal. We'd want to be make a prediction based on a model built on real data, that was properly evaluated.
+Both cases are not ideal for real people. We'd want to be make a prediction based on a model built on real data, that was properly evaluated.
 
 To properly evaluate a model with imbalanced data, we can look at Precision, Recall and F1 Score.
 
 <br>
 **Precision & Recall**
 
-Precision is a metric that tells us *of all observations that were predicted as positive, how many actually were positive*
+* Precision is a metric that tells us: *of all observations that were predicted as positive, how many were actually positive?*
+    * Keeping with the rare disease example, Precision would tell us *of all patients we predicted to have the disease, how many actually did?*
 
-Keeping with the rare disease example, Precision would tell us *of all patients we predicted to have the disease, how many actually did*
+* Recall is a metric that tells us: *of all the observations that were actually positive, how many did we predict as positive?*
+    * Referring to the rare disease example, Recall would tell us *of all patients who actually had the disease, how many did we correctly predict?*
 
-Recall is a metric that tells us *of all positive observations, how many did we predict as positive*
+If you try to increase Precision, Recall decreases, and vice versa.  Sometimes it will make more sense to try and elevate one of them, in spite of the other.  In the case of the rare disease example, perhaps it would be more important to optimize for Recall as we want to classify as many positive cases as possible. However, we don't want to classify every patient as having the disease, as that isn't a great outcome either.
 
-Again, referring to the rare disease example, Recall would tell us *of all patients who actually had the disease, how many did we correctly predict*
-
-The tricky thing about Precision & Recall is that it is impossible to optimise both - it's a zero-sum game.  If you try to increase Precision, Recall decreases, and vice versa.  Sometimes however it will make more sense to try and elevate one of them, in spite of the other.  In the case of our rare-disease prediction like we've used in our example, perhaps it would be more important to optimise for Recall as we want to classify as many positive cases as possible.  In saying this however, we don't want to just classify every patient as having the disease, as that isn't a great outcome either!
-
-So - there is one more metric we will discuss & calculate, which is actually a *combination* of both...
+There is one more metric which is a *combination* of both...
 
 <br>
 **F1 Score**
 
-F1-Score is a metric that essentially "combines" both Precision & Recall.  Technically speaking, it is the harmonic mean of these two metrics.  A good, or high, F1-Score comes when there is a balance between Precision & Recall, rather than a disparity between them.
+F1-Score is a metric that essentially "combines" Precision & Recall.  Technically speaking, it is the harmonic mean of these two metrics.  A good, or high, F1-Score comes when there is a balance between Precision & Recall, rather than a disparity between them.
 
-Overall, optimising your model for F1-Score means that you'll get a model that is working well for both positive & negative classifications rather than skewed towards one or the other.  To return to the rare disease predictions, a high F1-Score would mean we've got a good balance between successfully predicting the disease when it's present, and not predicting cases where it's not present.
+Overall, optimizing your model for F1-Score means that you'll get a model that is working well for both positive & negative classifications rather than skewed towards one or the other.  To return to the rare disease predictions, a high F1-Score would mean we've got a good balance between successfully predicting the disease when it's present, and not predicting cases where it's not present.
 
-Using all of these metrics in combination gives a really good overview of the performance of a classification model, and gives us an understanding of the different scenarios & considerations!
+Using all of these metrics in combination gives a really good overview of the performance of a classification model, and gives us an understanding of the different scenarios & considerations.
 
 <br>
-In the code below, we utilise in-built functionality from scikit-learn to calculate these four metrics.
+In the code below, we use in-built functionality from scikit-learn to calculate these four metrics.
 
 ```python
 
@@ -589,16 +591,16 @@ Running this code gives us:
 * Recall = **0.69** meaning that of all *actual* delivery club signups, we predicted correctly 69% of the time
 * F1-Score = **0.734** 
 
-Since our data is *somewhat* imbalanced, looking at these metrics rather than just Classification Accuracy on it's own - is a good idea, and gives us a much better understanding of what our predictions mean!  We will use these same metrics when applying other models for this task, and can compare how they stack up.
+Since our data is *somewhat* imbalanced, looking at these metrics rather than just Classification Accuracy on it's own - is a good idea, and gives us a much better understanding of what our predictions mean.  We will use these same metrics when applying other models for this task, and can compare how they stack up.
 
 <br>
 ### Finding The Optimal Classification Threshold <a name="logreg-opt-threshold"></a>
 
-By default, most pre-built classification models & algorithms will just use a 50% probability to discern between a positive class prediction (delivery club signup) and a negative class prediction (delivery club non-signup).
+By default, our model used 50% as the threshold for determining what class each observation gets assigned to. For example, if customer 1 was 45% likely to sign up for the delivery club, our model predicted them to be a 0 (to *not* sign up for the club). Any customer with a probability of 50% or more was classified as a 1 (to indeed sign up). 
 
 Just because 50% is the default threshold *does not mean* it is the best one for our task.
 
-Here, we will test many potential classification thresholds, and plot the Precision, Recall & F1-Score, and find an optimal solution!
+Here, we will test many potential classification thresholds, and plot the Precision, Recall & F1-Score, and find an optimal solution.
 
 <br>
 ```python
@@ -632,7 +634,7 @@ max_f1_idx = f1_scores.index(max_f1)
 ```
 <br>
 
-Now we have run this, we can use the below code to plot the results!
+Now we can use the below code to plot the results:
 
 <br>
 ```python
@@ -654,9 +656,10 @@ plt.show()
 ![alt text](/img/posts/log-reg-optimal-threshold-plot.png "Logistic Regression Optimal Threshold Plot")
 
 <br>
+
 Along the x-axis of the above plot we have the different classification thresholds that were testing.  Along the y-axis we have the performance score for each of our three metrics.  As per the legend, we have Precision as a blue dotted line, Recall as an orange dotted line, and F1-Score as a thick green line.  You can see the interesting "zero-sum" relationship between Precision & Recall *and* you can see that the point where Precision & Recall meet is where F1-Score is maximised.
 
-As you can see at the top of the plot, the optimal F1-Score for this model 0.78 and this is obtained at a classification threshold of 0.44.  This is higher than the F1-Score of 0.734 that we achieved at the default classification threshold of 0.50!
+As you can see at the top of the plot, the optimal F1-Score for this model 0.78 and this is obtained at a classification threshold of 0.44.  This is higher than the F1-Score of 0.734 that we achieved at the default classification threshold of 0.50.
 
 ___
 <br>
